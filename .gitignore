@@ -1,6 +1,9 @@
 external/glfw/build/
 build/OpenGL.opensdf
 build/OpenGL.sdf
+content/
+lib/
+include/
 source/Lesson1.1/bin/
 source/Lesson1.2/bin/
 source/Lesson1.3/bin/
