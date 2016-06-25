@@ -69,15 +69,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "$(SolutionDir)..\include\"
-copy "$(ProjectDir)*.h" "$(SolutionDir)..\include\"
-copy "$(ProjectDir)*.inl" "$(SolutionDir)..\include\"
-
-mkdir "$(SolutionDir)..\lib\"
-copy "$(TargetPath)" "$(SolutionDir)..\lib\"
-copy "$(TargetDir)*.pdb" "$(SolutionDir)..\lib\"
-
-mkdir "$(SolutionDir)..\content\"
+      <Command>mkdir "$(SolutionDir)..\content\"
 xcopy /E /Y "$(ProjectDir)Content" "$(SolutionDir)..\content"</Command>
     </PostBuildEvent>
     <FxCompile>
@@ -110,15 +102,7 @@ xcopy /E /Y "$(ProjectDir)Content" "$(SolutionDir)..\content"</Command>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>mkdir "$(SolutionDir)..\include\"
-copy "$(ProjectDir)*.h" "$(SolutionDir)..\include\"
-copy "$(ProjectDir)*.inl" "$(SolutionDir)..\include\"
-
-mkdir "$(SolutionDir)..\lib\"
-copy "$(TargetPath)" "$(SolutionDir)..\lib\"
-copy "$(TargetDir)*.pdb" "$(SolutionDir)..\lib\"
-
-mkdir "$(SolutionDir)..\content\"
+      <Command>mkdir "$(SolutionDir)..\content\"
 xcopy /E /Y "$(ProjectDir)Content" "$(SolutionDir)..\content"</Command>
     </PostBuildEvent>
     <FxCompile>

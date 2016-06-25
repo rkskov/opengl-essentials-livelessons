@@ -1,14 +1,11 @@
-#include "PointDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "Utility.h"
+#include "pch.h"
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(PointDemo)
 
-	PointDemo::PointDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(0), mVertexArrayObject(0)
+	PointDemo::PointDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mShaderProgram(0), mVertexArrayObject(0)
 	{
 	}
 
@@ -58,6 +55,8 @@ namespace Rendering
 
 	void PointDemo::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glUseProgram(mShaderProgram);
 		glPointSize(80.0f);
