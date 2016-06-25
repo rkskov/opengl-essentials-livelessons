@@ -2,8 +2,6 @@
 
 #include "Game.h"
 
-using namespace Library;
-
 namespace Library
 {
 	class GameTime;
@@ -11,14 +9,14 @@ namespace Library
 
 namespace Rendering
 {
-	class RenderingGame : public Game
+	class RenderingGame : public Library::Game
 	{
-		RTTI_DECLARATIONS(RenderingGame, Game)
+		RTTI_DECLARATIONS(RenderingGame, Library::Game)
 
 	public:
 		RenderingGame(HINSTANCE instance, const std::wstring& windowTitle);
 
 	protected:
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 	};
 }

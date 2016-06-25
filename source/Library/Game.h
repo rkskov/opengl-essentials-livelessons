@@ -4,6 +4,9 @@
 #include "GameClock.h"
 #include "GameTime.h"
 #include "GameComponent.h"
+#include "ServiceContainer.h"
+#include <vector>
+#include <map>
 #include <functional>
 
 namespace Library

@@ -1,12 +1,13 @@
-#include "RenderingGame.h"
-#include "ColorHelper.h"
+#include "pch.h"
+
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(RenderingGame)
 
-	RenderingGame::RenderingGame(HINSTANCE instance, const std::wstring& windowTitle)
-		:  Game(instance, windowTitle)
+	RenderingGame::RenderingGame(HINSTANCE instance, const std::wstring& windowTitle) :
+		Game(instance, windowTitle)
 	{
 	}
 
