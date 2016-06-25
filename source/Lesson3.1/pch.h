@@ -28,10 +28,12 @@
 #include "DrawableGameComponent.h"
 #include "Camera.h"
 #include "FirstPersonCamera.h"
+#include "VertexDeclarations.h"
+#include "ShaderProgram.h"
 
 // Local
 #include "RenderingGame.h"
-#include "PointDemo.h"
+#include "ColoredTriangleDemo.h"
 
 //TODO: remove
 #define DeleteObject(object) if((object) != NULL) { delete object; object = NULL; }

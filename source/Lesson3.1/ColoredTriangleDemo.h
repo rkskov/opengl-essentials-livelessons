@@ -13,21 +13,21 @@ namespace Rendering
 
 	public:		
 		ColoredTriangleDemo(Game& game, Camera& camera);
+		ColoredTriangleDemo(const ColoredTriangleDemo&) = delete;
+		ColoredTriangleDemo& operator=(const ColoredTriangleDemo&) = delete;
+		ColoredTriangleDemo(ColoredTriangleDemo&&) = delete;
+		ColoredTriangleDemo& operator=(ColoredTriangleDemo&&) = delete;
 		~ColoredTriangleDemo();
 
 		virtual void Initialize() override;
 		virtual void Draw(const GameTime& gameTime) override;
 
 	private:
-		enum VertexAttribute
+		enum class VertexAttribute
 		{
-			VertexAttributePosition = 0,
-			VertexAttributeColor = 1
+			Position = 0,
+			Color = 1
 		};
-
-		ColoredTriangleDemo();
-		ColoredTriangleDemo(const ColoredTriangleDemo& rhs);
-		ColoredTriangleDemo& operator=(const ColoredTriangleDemo& rhs);
 
 		ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
