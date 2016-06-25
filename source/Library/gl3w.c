@@ -1,3 +1,6 @@
+#pragma warning(push)
+#pragma warning(disable:4055)
+#pragma warning(disable:4152)
 #include <GL/gl3w.h>
 
 #ifdef _WIN32
@@ -1337,3 +1340,4 @@ static void load_procs(void)
 	gl3wTextureStorage2DMultisampleEXT = (PFNGLTEXTURESTORAGE2DMULTISAMPLEEXTPROC) get_proc("glTextureStorage2DMultisampleEXT");
 	gl3wTextureStorage3DMultisampleEXT = (PFNGLTEXTURESTORAGE3DMULTISAMPLEEXTPROC) get_proc("glTextureStorage3DMultisampleEXT");
 }
+#pragma warning(pop)

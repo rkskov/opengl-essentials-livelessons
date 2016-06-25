@@ -1,15 +1,22 @@
 #pragma once
 
-#include "Common.h"
+#include <GL/glcorearb.h>
+#include "glm/glm.hpp"
+#include <string>
 
 namespace Library
 {
 	class ShaderProgram;
 
-    class Variable
+    class Variable final
     {
     public:
-		Variable(ShaderProgram& shaderProgram, const std::string& name);		
+		Variable(ShaderProgram& shaderProgram, const std::string& name);
+		Variable(const Variable&) = delete;
+		Variable& operator=(const Variable&) = delete;
+		Variable(Variable&&) = delete;
+		Variable& operator=(Variable&&) = delete;
+		~Variable() = default;
 
         ShaderProgram& GetShaderProgram();
 		const GLint& Location() const;
@@ -23,9 +30,6 @@ namespace Library
 		Variable& operator<<(int value);
 
     private:
-        Variable(const Variable& rhs);
-        Variable& operator=(const Variable& rhs);
-
 		ShaderProgram& mShaderProgram;
 		GLint mLocation;
         std::string mName;

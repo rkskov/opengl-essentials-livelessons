@@ -48,5 +48,6 @@
     <None Include="Content\Effects\AmbientLightingDemo.vert">
       <Filter>Content\Effects</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

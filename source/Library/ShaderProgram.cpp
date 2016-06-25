@@ -1,18 +1,14 @@
-#include "ShaderProgram.h"
-#include "GameException.h"
-#include "Utility.h"
-#include "Model.h"
-#include "Mesh.h"
-#include <sstream>
+#include "pch.h"
+
+using namespace std;
 
 namespace Library
 {
 	RTTI_DEFINITIONS(ShaderProgram)
 
-	ShaderProgram::ShaderProgram()
-		: mProgram(0), mVariables(), mVariablesByName()
+	ShaderProgram::ShaderProgram() :
+		mProgram(glCreateProgram())
 	{
-		mProgram = glCreateProgram();
 	}
 
 	ShaderProgram::~ShaderProgram()
@@ -25,9 +21,9 @@ namespace Library
 		}
 	}
 
-	GLuint ShaderProgram::CompileShaderFromFile(GLenum shaderType, const std::wstring& filename)
+	GLuint ShaderProgram::CompileShaderFromFile(GLenum shaderType, const wstring& filename)
 	{
-		std::vector<char> shaderSource;
+		vector<char> shaderSource;
 		Utility::LoadBinaryFile(filename, shaderSource);
 		GLchar* sourcePointer = &shaderSource[0];
 		GLint length = shaderSource.size();
@@ -43,12 +39,12 @@ namespace Library
 			GLint logLength;
 			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logLength);
 
-			std::string log;
+			string log;
 			log.reserve(logLength);
 
 			glGetShaderInfoLog(shader, logLength, nullptr, const_cast<GLchar*>(log.c_str()));
 
-			std::stringstream errorMessage;
+			stringstream errorMessage;
 			errorMessage << "glCompileShader() failed.\n" << log.c_str();
 
 			throw GameException(errorMessage.str().c_str());
@@ -62,19 +58,19 @@ namespace Library
 		return mProgram;
 	}
 
-	const std::vector<Variable*>& ShaderProgram::Variables() const
+	const vector<Variable*>& ShaderProgram::Variables() const
 	{
 		return mVariables;
 	}
 
-	const std::map<std::string, Variable*>& ShaderProgram::VariablesByName() const
+	const map<string, Variable*>& ShaderProgram::VariablesByName() const
 	{
 		return mVariablesByName;
 	}
 
-	void ShaderProgram::BuildProgram(const std::vector<ShaderDefinition>& shaderDefinitions)
+	void ShaderProgram::BuildProgram(const vector<ShaderDefinition>& shaderDefinitions)
 	{
-		std::vector<GLuint> compiledShaders;
+		vector<GLuint> compiledShaders;
 		compiledShaders.reserve(shaderDefinitions.size());
 
 		for (ShaderDefinition shaderDefiniton : shaderDefinitions)
@@ -92,12 +88,12 @@ namespace Library
 			GLint logLength;
 			glGetProgramiv(mProgram, GL_INFO_LOG_LENGTH, &logLength);
 
-			std::string log;
+			string log;
 			log.reserve(logLength);
 
 			glGetProgramInfoLog(mProgram, logLength, nullptr, const_cast<GLchar*>(log.c_str()));
 
-			std::stringstream errorMessage;
+			stringstream errorMessage;
 			errorMessage << "glCompileShader() failed.\n" << log.c_str();
 
 			throw GameException(errorMessage.str().c_str());
@@ -114,7 +110,7 @@ namespace Library
 		glUseProgram(mProgram);
 	}
 
-	void ShaderProgram::CreateVertexBuffer(const Model& model, std::vector<GLuint>& vertexBuffers) const
+	void ShaderProgram::CreateVertexBuffer(const Model& model, vector<GLuint>& vertexBuffers) const
 	{
 		vertexBuffers.reserve(model.Meshes().size());
 		for (Mesh* mesh : model.Meshes())
@@ -132,10 +128,13 @@ namespace Library
 
 	void ShaderProgram::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const
 	{
+		UNREFERENCED_PARAMETER(mesh);
+		UNREFERENCED_PARAMETER(vertexBuffer);
+
 		throw GameException("ShaderProgram::CreateVertexBuffer() not implemented for base class.");
 	}
 
-	UINT ShaderProgram::VertexSize() const
+	uint32_t ShaderProgram::VertexSize() const
 	{
 		throw GameException("ShaderProgram::VertexSize() not implemented for base class.");
 	}

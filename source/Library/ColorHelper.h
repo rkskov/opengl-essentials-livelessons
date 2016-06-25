@@ -1,13 +1,20 @@
 #pragma once
 
-#include "Common.h"
+#include "glm/glm.hpp"
 #include <random>
 
 namespace Library
 {
-	class ColorHelper
+	class ColorHelper final
 	{
 	public:
+		ColorHelper() = delete;
+		ColorHelper(const ColorHelper&) = delete;
+		ColorHelper& operator=(const ColorHelper&) = delete;
+		ColorHelper(ColorHelper&&) = delete;
+		ColorHelper& operator=(ColorHelper&&) = delete;
+		~ColorHelper() = default;
+
 		static const glm::vec4 Black;
 		static const glm::vec4 White;
 		static const glm::vec4 Red;
@@ -26,9 +33,5 @@ namespace Library
 		static std::random_device sDevice;
 		static std::default_random_engine sGenerator;
 		static std::uniform_real_distribution<float> sDistribution;
-
-		ColorHelper();
-		ColorHelper(const ColorHelper& rhs);
-		ColorHelper& operator=(const ColorHelper& rhs);
 	};
 }

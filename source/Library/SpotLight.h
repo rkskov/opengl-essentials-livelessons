@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Common.h"
 #include "PointLight.h"
 
 namespace Library
@@ -11,7 +10,11 @@ namespace Library
 
 	public:
 		SpotLight(Game& game);
-		virtual ~SpotLight();
+		SpotLight(const SpotLight&) = default;
+		SpotLight& operator=(const SpotLight&) = default;
+		SpotLight(SpotLight&&) = default;
+		SpotLight& operator=(SpotLight&&) = default;
+		virtual ~SpotLight() = default;
 	
 		const glm::vec3& Direction() const;
 		const glm::vec3& Up() const;

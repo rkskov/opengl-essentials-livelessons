@@ -1,8 +1,4 @@
-#include "Utility.h"
-#include <algorithm>
-#include <exception>
-#include <Shlwapi.h>
-#include <fstream>
+#include "pch.h"
 
 namespace Library
 {

@@ -1,7 +1,4 @@
-#include "FirstPersonCamera.h"
-#include "Game.h"
-#include "GameTime.h"
-#include "VectorHelper.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -13,21 +10,17 @@ namespace Library
     const float FirstPersonCamera::DefaultMovementRate = 10.0f;
     const float FirstPersonCamera::DefaultMouseSensitivity = 3.0f;
 
-    FirstPersonCamera::FirstPersonCamera(Game& game)
-        : Camera(game),
-          mMouseSensitivity(DefaultMouseSensitivity), mRotationRate(DefaultRotationRate), mMovementRate(DefaultMovementRate),
-		  mLastCursorX(0.0), mLastCursorY(0.0)
+    FirstPersonCamera::FirstPersonCamera(Game& game) :
+		Camera(game),
+        mMouseSensitivity(DefaultMouseSensitivity), mRotationRate(DefaultRotationRate), mMovementRate(DefaultMovementRate),
+		mLastCursorX(0.0), mLastCursorY(0.0)
     {
     }
 
-    FirstPersonCamera::FirstPersonCamera(Game& game, float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance)
-        : Camera(game, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance),
-          mMouseSensitivity(DefaultMouseSensitivity), mRotationRate(DefaultRotationRate), mMovementRate(DefaultMovementRate),
-		  mLastCursorX(0.0), mLastCursorY(0.0)
-    {
-    }
-
-    FirstPersonCamera::~FirstPersonCamera()
+    FirstPersonCamera::FirstPersonCamera(Game& game, float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance) :
+		Camera(game, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance),
+        mMouseSensitivity(DefaultMouseSensitivity), mRotationRate(DefaultRotationRate), mMovementRate(DefaultMovementRate),
+		mLastCursorX(0.0), mLastCursorY(0.0)
     {
     }
 
@@ -35,7 +28,6 @@ namespace Library
     {
         return mMouseSensitivity;
     }
-
 
     float& FirstPersonCamera::RotationRate()
     {
@@ -91,7 +83,7 @@ namespace Library
 		mLastCursorX = x;
 		mLastCursorY = y;
 
-		float elapsedTime = (float)gameTime.ElapsedGameTime();
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
 		vec2 rotationVector = rotationAmount * mRotationRate * elapsedTime;
 
 		mat4 rotationMatrix = rotate(mat4(), rotationVector.y, mRight);

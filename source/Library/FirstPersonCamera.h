@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Camera.h"
-#include "Game.h"
 
 namespace Library
 {
@@ -12,12 +11,15 @@ namespace Library
     public:
         FirstPersonCamera(Game& game);
         FirstPersonCamera(Game& game, float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance);
-
-        virtual ~FirstPersonCamera();
+		FirstPersonCamera(const FirstPersonCamera&) = delete;
+		FirstPersonCamera& operator=(const FirstPersonCamera&) = delete;
+		FirstPersonCamera(FirstPersonCamera&&) = delete;
+		FirstPersonCamera& operator=(FirstPersonCamera&&) = delete;
+        virtual ~FirstPersonCamera() = default;
 
         float& MouseSensitivity();
         float& RotationRate();
-        float& MovementRate();		
+        float& MovementRate();
         
         virtual void Initialize() override;
         virtual void Update(const GameTime& gameTime) override;
@@ -32,9 +34,6 @@ namespace Library
         float mMovementRate;
 
     private:
-        FirstPersonCamera(const FirstPersonCamera& rhs);
-        FirstPersonCamera& operator=(const FirstPersonCamera& rhs);
-
 		double mLastCursorX;
 		double mLastCursorY;
     };

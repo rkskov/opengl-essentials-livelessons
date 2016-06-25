@@ -1,24 +1,23 @@
-#include "ServiceContainer.h"
+#include "pch.h"
 
 namespace Library
 {
-	ServiceContainer::ServiceContainer()
-		: mServices()
+	ServiceContainer GlobalServices;
+
+	void ServiceContainer::AddService(uint64_t typeID, void* service)
 	{
+		mServices.insert(std::pair<uint64_t, void*>(typeID, service));
 	}
 
-	void ServiceContainer::AddService(UINT typeID, void* service)
-	{
-		mServices.insert(std::pair<UINT, void*>(typeID, service));
-	}
-
-	void ServiceContainer::RemoveService(UINT typeID)
+	void ServiceContainer::RemoveService(uint64_t typeID)
 	{
 		mServices.erase(typeID);
 	}
 
-	void* ServiceContainer::GetService(UINT typeID) const
+	void* ServiceContainer::GetService(uint64_t typeID) const
 	{
-		return mServices.at(typeID);
+		std::map<uint64_t, void*>::const_iterator it = mServices.find(typeID);
+
+		return (it != mServices.end() ? it->second : nullptr);
 	}
 }

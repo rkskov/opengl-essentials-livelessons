@@ -1,18 +1,24 @@
 #pragma once
 
-#include "Common.h"
+#include "glm/glm.hpp"
 #include "DrawableGameComponent.h"
 #include "BasicEffect.h"
 
 namespace Library
 {
-	class Grid : public DrawableGameComponent
+	class Game;
+	class Camera;
+
+	class Grid final : public DrawableGameComponent
 	{
 		RTTI_DECLARATIONS(Grid, DrawableGameComponent)
 
 	public:
-		Grid(Game& game, Camera& camera);
-		Grid(Game& game, Camera& camera, GLuint size, GLuint scale, const glm::vec4& color);
+		Grid(Game& game, Camera& camera, GLuint size = DefaultSize, GLuint scale = DefaultScale, const glm::vec4& color = DefaultColor);
+		Grid(const Grid&) = delete;
+		Grid& operator=(const Grid&) = delete;
+		Grid(Grid&&) = delete;
+		Grid& operator=(Grid&&) = delete;
 		~Grid();
 
 		const glm::vec3& Position() const;
@@ -30,25 +36,20 @@ namespace Library
 		virtual void Draw(const GameTime& gameTime) override;
 
 	private:
-		Grid();
-		Grid(const Grid& rhs);
-		Grid& operator=(const Grid& rhs);
-		
 		void InitializeGrid();
 
 		static const GLuint DefaultSize;
 		static const GLuint DefaultScale;
 		static const glm::vec4 DefaultColor;
 
+		glm::mat4 mWorldMatrix;
+		glm::vec4 mColor;
+		glm::vec3 mPosition;
 		BasicEffect mShaderProgram;
 		GLuint mVertexArrayObject;
-		GLuint mVertexBuffer;
-	
-		glm::vec3 mPosition;
+		GLuint mVertexBuffer;		
 		GLuint mSize;
 		GLuint mScale;
-		glm::vec4 mColor;
-		glm::mat4 mWorldMatrix;
-		UINT mVertexCount;
+		std::uint32_t mVertexCount;
 	};
 }

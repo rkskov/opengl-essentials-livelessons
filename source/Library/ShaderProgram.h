@@ -1,7 +1,12 @@
 #pragma once
 
-#include "Common.h"
+#include "RTTI.h"
 #include "Variable.h"
+#include <string>
+#include <vector>
+#include <map>
+#include <cstdint>
+#include <GL/glcorearb.h>
 
 namespace Library
 {
@@ -16,11 +21,13 @@ namespace Library
 
 	public:
 		ShaderProgram();
+		ShaderProgram(const ShaderProgram& rhs) = delete;
+		ShaderProgram& operator=(const ShaderProgram& rhs) = delete;
+		ShaderProgram(ShaderProgram&& rhs) = delete;
+		ShaderProgram& operator=(ShaderProgram&& rhs) = delete;
 		virtual ~ShaderProgram();
 		
 		static GLuint CompileShaderFromFile(GLenum shaderType, const std::wstring& filename);
-
-		Variable* operator[](const std::string& variableName);
 
 		GLuint Program() const;	
 		const std::vector<Variable*>& Variables() const;
@@ -32,16 +39,12 @@ namespace Library
 		virtual void Use() const;
 		virtual void CreateVertexBuffer(const Model& model, std::vector<GLuint>& vertexBuffers) const;
 		virtual void CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const;
-		virtual UINT VertexSize() const;
+		virtual std::uint32_t VertexSize() const;
 
 	protected:
-		GLuint mProgram;
+		std::map<std::string, Variable*> mVariablesByName;		
 		std::vector<Variable*> mVariables;
-		std::map<std::string, Variable*> mVariablesByName;
-
-	private:
-		ShaderProgram(const ShaderProgram& rhs);
-		ShaderProgram& operator=(const ShaderProgram& rhs);	
+		GLuint mProgram;		
 	};
 
 	#define SHADER_VARIABLE_DECLARATION(VariableName)   \
@@ -56,7 +59,7 @@ namespace Library
 			return *m ## VariableName;								\
 		}
 
-	#define SHADER_VARIABLE_INITIALIZATION(VariableName) m ## VariableName(NULL)
+	#define SHADER_VARIABLE_INITIALIZATION(VariableName) m ## VariableName(nullptr)
 
 	#define SHADER_VARIABLE_INSTANTIATE(VariableName)															\
 		m ## VariableName = new Variable(*this, #VariableName);													\

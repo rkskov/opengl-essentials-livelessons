@@ -72,5 +72,6 @@
     <None Include="Content\Effects\FogDemo.vert">
       <Filter>Content\Effects</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

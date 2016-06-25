@@ -1,16 +1,13 @@
-#include "SkyboxEffect.h"
-#include "GameException.h"
-#include "Mesh.h"
-#include "ColorHelper.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
 
 namespace Library
 {
     RTTI_DEFINITIONS(SkyboxEffect)	
 
-    SkyboxEffect::SkyboxEffect()
-        : ShaderProgram(),
+    SkyboxEffect::SkyboxEffect() :
           SHADER_VARIABLE_INITIALIZATION(WorldViewProjection)
     {
     }
@@ -29,27 +26,27 @@ namespace Library
 
 	void SkyboxEffect::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const
 	{
-		const std::vector<vec3>& sourceVertices = mesh.Vertices();
+		const vector<vec3>& sourceVertices = mesh.Vertices();
 
-		std::vector<VertexPosition> vertices;
+		vector<VertexPosition> vertices;
 		vertices.reserve(sourceVertices.size());
 		for (UINT i = 0; i < sourceVertices.size(); i++)
 		{
-			vec3 position = sourceVertices.at(i);
+			const vec3& position = sourceVertices.at(i);
 			vertices.push_back(VertexPosition(vec4(position.x, position.y, position.z, 1.0f)));
 		}
 
 		CreateVertexBuffer(&vertices[0], vertices.size(), vertexBuffer);
 	}
 
-	void SkyboxEffect::CreateVertexBuffer(VertexPosition* vertices, GLuint vertexCount, GLuint& vertexBuffer) const
+	void SkyboxEffect::CreateVertexBuffer(VertexPosition* vertices, uint32_t vertexCount, GLuint& vertexBuffer) const
 	{
 		glGenBuffers(1, &vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, VertexSize() * vertexCount, &vertices[0], GL_STATIC_DRAW);
 	}
 
-    UINT SkyboxEffect::VertexSize() const
+	uint32_t SkyboxEffect::VertexSize() const
     {
         return sizeof(VertexPosition);
     }

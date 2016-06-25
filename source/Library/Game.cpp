@@ -1,31 +1,23 @@
-#include "Game.h"
-#include "DrawableGameComponent.h"
-#include "GameException.h"
-#include "Utility.h"
-#include "GLFW/glfw3native.h"
+#include "pch.h"
+
+using namespace std;
 
 namespace Library
 {
 	RTTI_DEFINITIONS(Game)
 
-	const UINT Game::DefaultScreenWidth = 800;
-	const UINT Game::DefaultScreenHeight = 600;
+	const uint32_t Game::DefaultScreenWidth = 800;
+	const uint32_t Game::DefaultScreenHeight = 600;
 
 	Game* Game::sInternalInstance = nullptr;
 
-	Game::Game(HINSTANCE instance, const std::wstring& windowTitle)
-		: mInstance(instance), mWindow(nullptr), mWindowTitle(windowTitle),
-		  mScreenWidth(DefaultScreenWidth), mScreenHeight(DefaultScreenHeight), mIsFullScreen(false),		  
-		  mMajorVersion(0), mMinorVersion(0),
-		  mGameClock(), mGameTime(), mComponents(), mServices(), mKeyboardHandlers(),
-		  mDepthStencilBufferEnabled(false)
+	Game::Game(HINSTANCE instance, const wstring& windowTitle) :
+		mInstance(instance), mWindow(nullptr), mWindowTitle(windowTitle),
+		mScreenWidth(DefaultScreenWidth), mScreenHeight(DefaultScreenHeight), mIsFullScreen(false),		  
+		mMajorVersion(0), mMinorVersion(0),
+		mDepthStencilBufferEnabled(false)
 	{
-		GlobalServices.AddService(TypeIdClass(), &(*this));
-	}
-
-	Game::~Game()
-	{
-		mComponents.clear();
+		GlobalServices.AddService(TypeIdClass(), this);
 	}
 
 	HINSTANCE Game::Instance() const
@@ -43,7 +35,12 @@ namespace Library
 		return glfwGetWin32Window(mWindow);
 	}
 
-	const std::wstring& Game::WindowTitle() const
+	bool Game::DepthStencilBufferEnabled() const
+	{
+		return mDepthStencilBufferEnabled;
+	}
+
+	const wstring& Game::WindowTitle() const
 	{
 		return mWindowTitle;
 	}
@@ -68,7 +65,7 @@ namespace Library
 		return mIsFullScreen;
 	}
 
-	const std::vector<GameComponent*>& Game::Components() const
+	const vector<GameComponent*>& Game::Components() const
 	{
 		return mComponents;
 	}
@@ -196,6 +193,8 @@ namespace Library
 
 	void Game::OnKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
+		UNREFERENCED_PARAMETER(window);
+
 		for (auto handler : sInternalInstance->mKeyboardHandlers)
 		{
 			handler.second(key, scancode, action, mods);

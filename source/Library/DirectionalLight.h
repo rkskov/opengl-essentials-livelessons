@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Common.h"
 #include "Light.h"
 
 namespace Library
@@ -11,7 +10,11 @@ namespace Library
 
 	public:
 		DirectionalLight(Game& game);
-		virtual ~DirectionalLight();
+		DirectionalLight(const DirectionalLight&) = default;
+		DirectionalLight& operator=(const DirectionalLight&) = default;
+		DirectionalLight(DirectionalLight&&) = default;
+		DirectionalLight& operator=(DirectionalLight&&) = default;
+		virtual ~DirectionalLight() = default;
 
 		const glm::vec3& Direction() const;
 		const glm::vec3& Up() const;

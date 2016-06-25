@@ -1,26 +1,28 @@
 #pragma once
 
-#include "Common.h"
+#include <string>
+#include <map>
+#include <vector>
 
 struct aiMaterial;
 
 namespace Library
 {
-    enum TextureType
+    enum class TextureType
     {
-        TextureTypeDifffuse = 0,
-        TextureTypeSpecularMap,
-        TextureTypeAmbient,
-        TextureTypeEmissive,
-        TextureTypeHeightmap,
-        TextureTypeNormalMap,
-        TextureTypeSpecularPowerMap,
-        TextureTypeDisplacementMap,
-        TextureTypeLightMap,
-        TextureTypeEnd
+        Difffuse = 0,
+        SpecularMap,
+        Ambient,
+        Emissive,
+        Heightmap,
+        NormalMap,
+        SpecularPowerMap,
+        DisplacementMap,
+        LightMap,
+        End
     };
 
-    class ModelMaterial
+    class ModelMaterial final
     {
         friend class Model;
 

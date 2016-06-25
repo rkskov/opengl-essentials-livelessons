@@ -1,7 +1,4 @@
-#include "Camera.h"
-#include "Game.h"
-#include "GameTime.h"
-#include "VectorHelper.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -13,21 +10,17 @@ namespace Library
 	const float Camera::DefaultNearPlaneDistance = 0.01f;
 	const float Camera::DefaultFarPlaneDistance = 1000.0f;
 
-	Camera::Camera(Game& game)
-		: GameComponent(game),
+	Camera::Camera(Game& game) :
+		GameComponent(game),
 		mFieldOfView(DefaultFieldOfView), mAspectRatio(game.AspectRatio()), mNearPlaneDistance(DefaultNearPlaneDistance), mFarPlaneDistance(DefaultFarPlaneDistance),
 		mPosition(), mDirection(), mUp(), mRight(), mViewMatrix(), mProjectionMatrix()
 	{
 	}
 
-	Camera::Camera(Game& game, float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance)
-		: GameComponent(game),
+	Camera::Camera(Game& game, float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance) :
+		GameComponent(game),
 		mFieldOfView(fieldOfView), mAspectRatio(aspectRatio), mNearPlaneDistance(nearPlaneDistance), mFarPlaneDistance(farPlaneDistance),
 		mPosition(), mDirection(), mUp(), mRight(), mViewMatrix(), mProjectionMatrix()
-	{
-	}
-
-	Camera::~Camera()
 	{
 	}
 
@@ -86,7 +79,7 @@ namespace Library
 		return mProjectionMatrix * mViewMatrix;
 	}
 
-	void Camera::SetPosition(FLOAT x, FLOAT y, FLOAT z)
+	void Camera::SetPosition(float x, float y, float z)
 	{
 		mPosition = vec3(x, y, z);
 	}
@@ -114,6 +107,8 @@ namespace Library
 
 	void Camera::Update(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		UpdateViewMatrix();
 	}
 

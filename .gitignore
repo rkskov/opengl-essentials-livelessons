@@ -42,3 +42,7 @@ source/Lesson6.2/obj/
 source/Lesson6.3/obj/
 source/Lesson6.4/obj/
 source/Library/obj/
+build/packages/
+build/OpenGL.VC.VC.opendb
+build/OpenGL.VC.db
+build/ipch/

@@ -1,23 +1,23 @@
 #pragma once
 
-#include <windows.h>
 #include <map>
 
 namespace Library
 {
-	class ServiceContainer
+	class ServiceContainer final
 	{
 	public:
-		ServiceContainer();
+		ServiceContainer() = default;
+		ServiceContainer(const ServiceContainer& rhs) = delete;
+		ServiceContainer& operator=(const ServiceContainer& rhs) = delete;
+		ServiceContainer(ServiceContainer&& rhs) = delete;
+		ServiceContainer& operator=(ServiceContainer&& rhs) = delete;
+		~ServiceContainer() = default;
 
-		void AddService(UINT typeID, void* service);
-		void RemoveService(UINT typeID);
-		void* GetService(UINT typeID) const;
+		void AddService(std::uint64_t typeID, void* service);
+		void RemoveService(std::uint64_t typeID);
+		void* GetService(std::uint64_t typeID) const;
 
-	private:
-		ServiceContainer(const ServiceContainer& rhs);
-		ServiceContainer& operator=(const ServiceContainer& rhs);
-
-		std::map<UINT, void*> mServices;		
+		std::map<std::uint64_t, void*> mServices;
 	};
 }

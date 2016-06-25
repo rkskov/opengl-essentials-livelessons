@@ -1,4 +1,4 @@
-#include "DrawableGameComponent.h"
+#include "pch.h"
 
 namespace Library
 {
@@ -19,31 +19,8 @@ namespace Library
 	{
 	}
 
-	DrawableGameComponent::~DrawableGameComponent()
-	{
-	}
-
-	bool DrawableGameComponent::Visible() const
-	{
-		return mVisible;
-	}
-
-	void DrawableGameComponent::SetVisible(bool visible)
-	{
-		mVisible = visible;
-	}
-
-	Camera* DrawableGameComponent::GetCamera()
-	{
-		return mCamera;
-	}
-
-	void DrawableGameComponent::SetCamera(Camera* camera)
-	{
-		mCamera = camera;
-	}
-
 	void DrawableGameComponent::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
 	}
 }

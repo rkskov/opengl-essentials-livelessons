@@ -1,14 +1,11 @@
-#include "Mesh.h"
-#include "Model.h"
-#include "Game.h"
-#include "GameException.h"
-#include <assimp/scene.h>
+#include "pch.h"
+
+using namespace std;
 
 namespace Library
 {
-    Mesh::Mesh(Model& model, aiMesh& mesh)
-        : mModel(model), mMaterial(nullptr), mName(mesh.mName.C_Str()), mVertices(), mNormals(), mTangents(), mBiNormals(), mTextureCoordinates(), mVertexColors(),
-		  mFaceCount(0), mIndices()
+    Mesh::Mesh(Model& model, aiMesh& mesh) :
+		mModel(model), mMaterial(nullptr), mName(mesh.mName.C_Str()), mFaceCount(0)
     {
 		mMaterial = mModel.Materials().at(mesh.mMaterialIndex);
 
@@ -50,7 +47,7 @@ namespace Library
         UINT uvChannelCount = mesh.GetNumUVChannels();
         for (UINT i = 0; i < uvChannelCount; i++)
         {
-            std::vector<glm::vec3>* textureCoordinates = new std::vector<glm::vec3>();
+            vector<glm::vec3>* textureCoordinates = new vector<glm::vec3>();
             textureCoordinates->reserve(mesh.mNumVertices);
             mTextureCoordinates.push_back(textureCoordinates);
 
@@ -66,7 +63,7 @@ namespace Library
         UINT colorChannelCount = mesh.GetNumColorChannels();
         for (UINT i = 0; i < colorChannelCount; i++)
         {
-            std::vector<glm::vec4>* vertexColors = new std::vector<glm::vec4>();
+            vector<glm::vec4>* vertexColors = new vector<glm::vec4>();
             vertexColors->reserve(mesh.mNumVertices);
             mVertexColors.push_back(vertexColors);
 
@@ -96,12 +93,12 @@ namespace Library
 
     Mesh::~Mesh()
     {
-        for (std::vector<glm::vec3>* textureCoordinates : mTextureCoordinates)
+        for (vector<glm::vec3>* textureCoordinates : mTextureCoordinates)
         {
             delete textureCoordinates;
         }
 
-        for (std::vector<glm::vec4>* vertexColors : mVertexColors)
+        for (vector<glm::vec4>* vertexColors : mVertexColors)
         {
             delete vertexColors;
         }
@@ -117,47 +114,47 @@ namespace Library
         return mMaterial;
     }
 
-    const std::string& Mesh::Name() const
+    const string& Mesh::Name() const
     {
         return mName;
     }
 
-    const std::vector<glm::vec3>& Mesh::Vertices() const
+    const vector<glm::vec3>& Mesh::Vertices() const
     {
         return mVertices;
     }
 
-    const std::vector<glm::vec3>& Mesh::Normals() const
+    const vector<glm::vec3>& Mesh::Normals() const
     {
         return mNormals;
     }
 
-    const std::vector<glm::vec3>& Mesh::Tangents() const
+    const vector<glm::vec3>& Mesh::Tangents() const
     {
         return mTangents;
     }
 
-    const std::vector<glm::vec3>& Mesh::BiNormals() const
+    const vector<glm::vec3>& Mesh::BiNormals() const
     {
         return mBiNormals;
     }
 
-    const std::vector<std::vector<glm::vec3>*>& Mesh::TextureCoordinates() const
+    const vector<vector<glm::vec3>*>& Mesh::TextureCoordinates() const
     {
         return mTextureCoordinates;
     }
 
-    const std::vector<std::vector<glm::vec4>*>& Mesh::VertexColors() const
+    const vector<vector<glm::vec4>*>& Mesh::VertexColors() const
     {
         return mVertexColors;
     }
 
-    UINT Mesh::FaceCount() const
+    uint32_t Mesh::FaceCount() const
     {
         return mFaceCount;
     }
 
-    const std::vector<UINT>& Mesh::Indices() const
+    const vector<uint32_t>& Mesh::Indices() const
     {
         return mIndices;
     }

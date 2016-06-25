@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common.h"
+#include "RTTI.h"
 
 namespace Library
 {
@@ -14,7 +14,11 @@ namespace Library
 	public:
 		GameComponent();
 		GameComponent(Game& game);
-		virtual ~GameComponent();
+		GameComponent(const GameComponent& rhs) = delete;
+		GameComponent& operator=(const GameComponent& rhs) = delete;
+		GameComponent(GameComponent&& rhs) = delete;
+		GameComponent& operator=(GameComponent&& rhs) = delete;
+		virtual ~GameComponent() = default;
 
 		Game* GetGame();
 		void SetGame(Game& game);
@@ -27,9 +31,7 @@ namespace Library
 	protected:
 		Game* mGame;
 		bool mEnabled;
-
-	private:
-		GameComponent(const GameComponent& rhs);
-		GameComponent& operator=(const GameComponent& rhs);
 	};
 }
+
+#include "GameComponent.inl"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common.h"
+#include "RTTI.h"
 #include "GameClock.h"
 #include "GameTime.h"
 #include "GameComponent.h"
@@ -16,13 +16,16 @@ namespace Library
 		typedef std::function<void(int, int, int, int)> KeyboardHandler;
 		
 		Game(HINSTANCE instance, const std::wstring& windowTitle);
-		~Game();
+		Game(const Game&) = delete;
+		Game& operator=(const Game&) = delete;
+		Game(Game&&) = delete;
+		Game& operator=(Game&&) = delete;
+		virtual ~Game() = default;
 
 		HINSTANCE Instance() const;
 		GLFWwindow* Window() const;
 		HWND Game::WindowHandle() const;
-		bool DepthBufferEnabled() const;
-		const std::wstring& WindowClass() const;
+		bool DepthStencilBufferEnabled() const;
 		const std::wstring& WindowTitle() const;
 		int ScreenWidth() const;
 		int ScreenHeight() const;
@@ -45,15 +48,15 @@ namespace Library
 		virtual void InitializeOpenGL();
 		virtual void Shutdown();
 
-		static const UINT DefaultScreenWidth;
-		static const UINT DefaultScreenHeight;
-		static const UINT DefaultFrameRate;
+		static const std::uint32_t DefaultScreenWidth;
+		static const std::uint32_t DefaultScreenHeight;
+		static const std::uint32_t DefaultFrameRate;
 		
 		HINSTANCE mInstance;
 		std::wstring mWindowTitle;		
 		GLFWwindow* mWindow;
-		UINT mScreenWidth;
-		UINT mScreenHeight;
+		std::uint32_t mScreenWidth;
+		std::uint32_t mScreenHeight;
 		bool mIsFullScreen;
 
 		GLint mMajorVersion;
@@ -70,9 +73,6 @@ namespace Library
 		std::map<KeyboardHandler*, KeyboardHandler> mKeyboardHandlers;
 
 	private:
-		Game(const Game& rhs);
-		Game& operator=(const Game& rhs);
-
 		static Game* sInternalInstance;
 
 		static void OnKey(GLFWwindow* window, int key, int scancode, int action, int mods);

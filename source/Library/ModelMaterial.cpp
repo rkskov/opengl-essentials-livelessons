@@ -1,7 +1,4 @@
-#include "ModelMaterial.h"
-#include "GameException.h"
-#include "Utility.h"
-#include <assimp/scene.h>
+#include "pch.h"
 
 namespace Library
 {
@@ -22,7 +19,7 @@ namespace Library
         material->Get(AI_MATKEY_NAME, name);
         mName = name.C_Str();
 
-        for (TextureType textureType = (TextureType)0; textureType < TextureTypeEnd; textureType = (TextureType)(textureType + 1))
+        for (TextureType textureType = static_cast<TextureType>(0); textureType < TextureType::End; textureType = static_cast<TextureType>((static_cast<int>(textureType) + 1)))
         {
             aiTextureType mappedTextureType = (aiTextureType)sTextureTypeMappings[textureType];
 
@@ -73,16 +70,16 @@ namespace Library
 
     void ModelMaterial::InitializeTextureTypeMappings()
     {
-        if (sTextureTypeMappings.size() != TextureTypeEnd)
+		if (sTextureTypeMappings.size() != static_cast<int>(TextureType::End))
         {
-            sTextureTypeMappings[TextureTypeDifffuse] = aiTextureType_DIFFUSE;
-            sTextureTypeMappings[TextureTypeSpecularMap] = aiTextureType_SPECULAR;
-            sTextureTypeMappings[TextureTypeAmbient] = aiTextureType_AMBIENT;
-            sTextureTypeMappings[TextureTypeHeightmap] = aiTextureType_HEIGHT;
-            sTextureTypeMappings[TextureTypeNormalMap] = aiTextureType_NORMALS;
-            sTextureTypeMappings[TextureTypeSpecularPowerMap] = aiTextureType_SHININESS;
-            sTextureTypeMappings[TextureTypeDisplacementMap] = aiTextureType_DISPLACEMENT;
-            sTextureTypeMappings[TextureTypeLightMap] = aiTextureType_LIGHTMAP;
+            sTextureTypeMappings[TextureType::Difffuse] = aiTextureType_DIFFUSE;
+            sTextureTypeMappings[TextureType::SpecularMap] = aiTextureType_SPECULAR;
+            sTextureTypeMappings[TextureType::Ambient] = aiTextureType_AMBIENT;
+            sTextureTypeMappings[TextureType::Heightmap] = aiTextureType_HEIGHT;
+            sTextureTypeMappings[TextureType::NormalMap] = aiTextureType_NORMALS;
+            sTextureTypeMappings[TextureType::SpecularPowerMap] = aiTextureType_SHININESS;
+            sTextureTypeMappings[TextureType::DisplacementMap] = aiTextureType_DISPLACEMENT;
+            sTextureTypeMappings[TextureType::LightMap] = aiTextureType_LIGHTMAP;
         }
     }
 }

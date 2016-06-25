@@ -1,6 +1,10 @@
 #pragma once
 
-#include "Common.h"
+#include "GL/glcorearb.h"
+#include "glm/glm.hpp"
+#include <cstdint>
+#include <string>
+#include <vector>
 
 struct aiMesh;
 
@@ -9,11 +13,15 @@ namespace Library
     class Material;
     class ModelMaterial;
 
-    class Mesh
+    class Mesh final
     {
         friend class Model;
 
     public:
+		Mesh(const Mesh&) = delete;
+		Mesh& operator=(const Mesh&) = delete;
+		Mesh(Mesh&&) = delete;
+		Mesh& operator=(Mesh&&) = delete;
         ~Mesh();
 
         Model& GetModel();
@@ -26,15 +34,13 @@ namespace Library
         const std::vector<glm::vec3>& BiNormals() const;
         const std::vector<std::vector<glm::vec3>*>& TextureCoordinates() const;
         const std::vector<std::vector<glm::vec4>*>& VertexColors() const;
-        UINT FaceCount() const;
+        std::uint32_t FaceCount() const;
         const std::vector<UINT>& Indices() const;
 
         void CreateIndexBuffer(GLuint& indexBuffer);
 
     private:
         Mesh(Model& model, aiMesh& mesh);
-        Mesh(const Mesh& rhs);
-        Mesh& operator=(const Mesh& rhs);
 
         Model& mModel;
         ModelMaterial* mMaterial;
@@ -45,7 +51,7 @@ namespace Library
         std::vector<glm::vec3> mBiNormals;
         std::vector<std::vector<glm::vec3>*> mTextureCoordinates;
         std::vector<std::vector<glm::vec4>*> mVertexColors;
-        UINT mFaceCount;
-        std::vector<UINT> mIndices;
+        std::uint32_t mFaceCount;
+        std::vector<std::uint32_t> mIndices;
     };
 }

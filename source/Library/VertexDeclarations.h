@@ -1,21 +1,21 @@
 #pragma once
 
-#include "Common.h"
+#include "glm/glm.hpp"
 
 namespace Library
 {
-	class VertexPosition
+	class VertexPosition final
     {
 	public:
         glm::vec4 Position;
 
         VertexPosition() { }
 
-		VertexPosition(const glm::vec4& position)
-            : Position(position) { }
+		VertexPosition(const glm::vec4& position) :
+			Position(position){ }
     };
 
-	class VertexPositionColor
+	class VertexPositionColor final
     {
 	public:
         glm::vec4 Position;
@@ -23,11 +23,11 @@ namespace Library
 
         VertexPositionColor() { }
 
-		VertexPositionColor(const glm::vec4& position, const glm::vec4& color)
-            : Position(position), Color(color) { }
+		VertexPositionColor(const glm::vec4& position, const glm::vec4& color) :
+			Position(position), Color(color) { }
     };
 
-	class VertexPositionColorTexture
+	class VertexPositionColorTexture final
 	{
 	public:
 		glm::vec4 Position;
@@ -36,11 +36,11 @@ namespace Library
 
 		VertexPositionColorTexture() { }
 
-		VertexPositionColorTexture(const glm::vec4& position, const glm::vec4& color, const glm::vec2& textureCoordinates)
-			: Position(position), Color(color), TextureCoordinates(textureCoordinates) { }
+		VertexPositionColorTexture(const glm::vec4& position, const glm::vec4& color, const glm::vec2& textureCoordinates) :
+			Position(position), Color(color), TextureCoordinates(textureCoordinates) { }
 	};
 
-	class VertexPositionTexture
+	class VertexPositionTexture final
 	{
 	public:
 		glm::vec4 Position;
@@ -48,11 +48,11 @@ namespace Library
 
 		VertexPositionTexture() { }
 
-		VertexPositionTexture(const glm::vec4& position, const glm::vec2& textureCoordinates)
-			: Position(position), TextureCoordinates(textureCoordinates) { }
+		VertexPositionTexture(const glm::vec4& position, const glm::vec2& textureCoordinates) :
+			Position(position), TextureCoordinates(textureCoordinates) { }
 	};
 
-	class VertexPositionSize
+	class VertexPositionSize final
 	{
 	public:
 		glm::vec4 Position;
@@ -60,11 +60,11 @@ namespace Library
 
 		VertexPositionSize() { }
 
-		VertexPositionSize(const glm::vec4& position, const glm::vec2& size)
-			: Position(position), Size(size) { }
+		VertexPositionSize(const glm::vec4& position, const glm::vec2& size) :
+			Position(position), Size(size) { }
 	};
 
-	class VertexPositionNormal
+	class VertexPositionNormal final
     {
 	public:
         glm::vec4 Position;
@@ -72,11 +72,11 @@ namespace Library
 
         VertexPositionNormal() { }
 
-		VertexPositionNormal(const glm::vec4& position, const glm::vec3& normal)
-            : Position(position), Normal(normal) { }
+		VertexPositionNormal(const glm::vec4& position, const glm::vec3& normal) :
+			Position(position), Normal(normal) { }
     };
 
-	class VertexPositionTextureNormal
+	class VertexPositionTextureNormal final
 	{
 	public:
 		glm::vec4 Position;
@@ -85,11 +85,11 @@ namespace Library
 
 		VertexPositionTextureNormal() { }
 
-		VertexPositionTextureNormal(const glm::vec4& position, const glm::vec2& textureCoordinates, const glm::vec3& normal)
-			: Position(position), TextureCoordinates(textureCoordinates), Normal(normal) { }
+		VertexPositionTextureNormal(const glm::vec4& position, const glm::vec2& textureCoordinates, const glm::vec3& normal) :
+			Position(position), TextureCoordinates(textureCoordinates), Normal(normal) { }
 	};
 
-	class VertexPositionTextureNormalTangentBinormal
+	class VertexPositionTextureNormalTangentBinormal final
 	{
 	public:
 		glm::vec4 Position;
@@ -100,11 +100,11 @@ namespace Library
 
 		VertexPositionTextureNormalTangentBinormal() { }
 
-		VertexPositionTextureNormalTangentBinormal(const glm::vec4& position, const glm::vec2& textureCoordinates, const glm::vec3& normal, const glm::vec3& tangent, const glm::vec3& binormal)
-			: Position(position), TextureCoordinates(textureCoordinates), Normal(normal), Tangent(tangent), Binormal(binormal) { }
+		VertexPositionTextureNormalTangentBinormal(const glm::vec4& position, const glm::vec2& textureCoordinates, const glm::vec3& normal, const glm::vec3& tangent, const glm::vec3& binormal) :
+			Position(position), TextureCoordinates(textureCoordinates), Normal(normal), Tangent(tangent), Binormal(binormal) { }
 	};
 
-	class VertexSkinnedPositionTextureNormal
+	class VertexSkinnedPositionTextureNormal final
 	{
 	public:
 		glm::vec4 Position;
@@ -115,7 +115,7 @@ namespace Library
 
 		VertexSkinnedPositionTextureNormal() { }
 
-		VertexSkinnedPositionTextureNormal(const glm::vec4& position, const glm::vec2& textureCoordinates, const glm::vec3& normal, const glm::uvec4& boneIndices, const glm::vec4& boneWeights)
-			: Position(position), TextureCoordinates(textureCoordinates), Normal(normal), BoneIndices(boneIndices), BoneWeights(boneWeights) { }
+		VertexSkinnedPositionTextureNormal(const glm::vec4& position, const glm::vec2& textureCoordinates, const glm::vec3& normal, const glm::uvec4& boneIndices, const glm::vec4& boneWeights) :
+			Position(position), TextureCoordinates(textureCoordinates), Normal(normal), BoneIndices(boneIndices), BoneWeights(boneWeights) { }
 	};
 }

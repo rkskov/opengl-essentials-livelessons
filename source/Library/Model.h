@@ -1,25 +1,27 @@
 #pragma once
 
-#include "Common.h"
+#include <string>
+#include <vector>
 
 struct aiNode;
 
 namespace Library
 {
-    class Game;
     class Mesh;
     class ModelMaterial;
-	class AnimationClip;
 
-    class Model
+    class Model final
     {
 		friend class Mesh;
 
     public:
-        Model(Game& game, const std::string& filename, bool flipUVs = false);
+        Model(const std::string& filename, bool flipUVs = false);
+		Model(const Model&) = delete;
+		Model& operator=(const Model&) = delete;
+		Model(Model&&);
+		Model& operator=(Model&&);
         ~Model();
 
-        Game& GetGame();
         bool HasMeshes() const;
         bool HasMaterials() const;
 
@@ -27,10 +29,6 @@ namespace Library
         const std::vector<ModelMaterial*>& Materials() const;
 
     private:
-        Model(const Model& rhs);
-        Model& operator=(const Model& rhs);
-
-        Game& mGame;
         std::vector<Mesh*> mMeshes;
         std::vector<ModelMaterial*> mMaterials;
     };

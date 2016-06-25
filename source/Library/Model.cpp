@@ -1,16 +1,11 @@
-#include "Model.h"
-#include "Game.h"
-#include "GameException.h"
-#include "Mesh.h"
-#include "ModelMaterial.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include "pch.h"
+
+using namespace std;
 
 namespace Library
 {
-    Model::Model(Game& game, const std::string& filename, bool flipUVs)
-		: mGame(game), mMeshes(), mMaterials()
+    Model::Model(const string& filename, bool flipUVs) :
+		mMeshes(), mMaterials()
     {
         Assimp::Importer importer;
 
@@ -43,6 +38,22 @@ namespace Library
             }
         }
 	}
+
+	Model::Model(Model&& rhs) :
+		mMeshes(move(rhs.mMeshes)), mMaterials(move(rhs.mMaterials))
+	{
+	}
+
+	Model & Model::operator=(Model&& rhs)
+	{
+		if (this != &rhs)
+		{
+			mMeshes = move(rhs.mMeshes);
+			mMaterials = move(rhs.mMaterials);
+		}
+
+		return *this;
+	}
 	
     Model::~Model()
     {
@@ -57,11 +68,6 @@ namespace Library
         }
     }
 
-    Game& Model::GetGame()
-    {
-        return mGame;
-    }
-
     bool Model::HasMeshes() const
     {
         return (mMeshes.size() > 0);
@@ -72,12 +78,12 @@ namespace Library
         return (mMaterials.size() > 0);
     }
 
-    const std::vector<Mesh*>& Model::Meshes() const
+    const vector<Mesh*>& Model::Meshes() const
     {
         return mMeshes;
     }
 
-    const std::vector<ModelMaterial*>& Model::Materials() const
+    const vector<ModelMaterial*>& Model::Materials() const
     {
         return mMaterials;
     }

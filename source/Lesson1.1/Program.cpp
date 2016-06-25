@@ -1,7 +1,12 @@
-﻿#include "Common.h"
+﻿#include "pch.h"
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR commandLine, int showCommand)
 {
+	UNREFERENCED_PARAMETER(instance);
+	UNREFERENCED_PARAMETER(previousInstance);
+	UNREFERENCED_PARAMETER(commandLine);
+	UNREFERENCED_PARAMETER(showCommand);
+
 	const glm::vec4 CornflowerBlue = glm::vec4(0.392f, 0.584f, 0.929f, 1.0f);
 
 	if (!glfwInit())

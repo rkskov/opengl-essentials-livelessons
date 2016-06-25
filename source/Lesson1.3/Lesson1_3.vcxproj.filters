@@ -48,5 +48,6 @@
     <None Include="Content\Effects\PointDemo.frag">
       <Filter>Content\Effects</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

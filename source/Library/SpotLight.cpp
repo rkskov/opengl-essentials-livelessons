@@ -1,5 +1,4 @@
-#include "SpotLight.h"
-#include "VectorHelper.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -10,13 +9,9 @@ namespace Library
 	const float SpotLight::DefaultInnerAngle = 0.75f;
 	const float SpotLight::DefaultOuterAngle = 0.25f;
 
-	SpotLight::SpotLight(Game& game)
-		: PointLight(game), mInnerAngle(DefaultInnerAngle), mOuterAngle(DefaultOuterAngle),
-		  mDirection(Vector3Helper::Forward), mUp(Vector3Helper::Up), mRight(Vector3Helper::Right)
-	{
-	}
-
-	SpotLight::~SpotLight()
+	SpotLight::SpotLight(Game& game) :
+		PointLight(game), mInnerAngle(DefaultInnerAngle), mOuterAngle(DefaultOuterAngle),
+		mDirection(Vector3Helper::Forward), mUp(Vector3Helper::Up), mRight(Vector3Helper::Right)
 	{
 	}
 
@@ -58,10 +53,10 @@ namespace Library
     void SpotLight::ApplyRotation(const mat4& transform)
     {
 		vec4 direction = transform * vec4(mDirection, 0.0f);
-		mDirection = (vec3)normalize(direction);
+		mDirection = static_cast<vec3>(normalize(direction));
 
 		vec4 up = transform * vec4(mUp, 0.0f);
-		mUp = (vec3)normalize(up);
+		mUp = static_cast<vec3>(normalize(up));
 
 		mRight = cross(mDirection, mUp);
 		mUp = cross(mRight, mDirection);

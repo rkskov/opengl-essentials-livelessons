@@ -1,21 +1,29 @@
 #pragma once
 
+#include <chrono>
+
 namespace Library
 {
-	class GameTime
+	class GameTime final
 	{
 	public:
 		GameTime();
-		GameTime(double totalGameTime, double elapsedGameTime);
 
-		double TotalGameTime() const;
-		void SetTotalGameTime(double totalGameTime);
+		const std::chrono::high_resolution_clock::time_point& CurrentTime() const;
+		void SetCurrentTime(const std::chrono::high_resolution_clock::time_point& currentTime);
 
-		double ElapsedGameTime() const;
-		void SetElapsedGameTime(double elapsedGameTime);
+		const std::chrono::milliseconds& TotalGameTime() const;
+		void SetTotalGameTime(const std::chrono::milliseconds& totalGameTime);
+
+		const std::chrono::milliseconds& ElapsedGameTime() const;
+		void SetElapsedGameTime(const std::chrono::milliseconds& elapsedGameTime);
+
+		std::chrono::duration<float> TotalGameTimeSeconds() const;
+		std::chrono::duration<float> ElapsedGameTimeSeconds() const;
 
 	private:
-		double mTotalGameTime;
-		double mElapsedGameTime;
+		std::chrono::high_resolution_clock::time_point mCurrentTime;
+		std::chrono::milliseconds mTotalGameTime;
+		std::chrono::milliseconds mElapsedGameTime;
 	};
 }

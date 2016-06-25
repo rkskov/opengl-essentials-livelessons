@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common.h"
+#include "glm/glm.hpp"
 #include "DrawableGameComponent.h"
 #include "BasicEffect.h"
 
@@ -8,12 +8,16 @@ namespace Library
 {
 	class Mesh;
 
-	class ProxyModel : public DrawableGameComponent
+	class ProxyModel final : public DrawableGameComponent
 	{
 		RTTI_DECLARATIONS(ProxyModel, DrawableGameComponent)
 
 	public:
 		ProxyModel(Game& game, Camera& camera, const std::string& modelFileName, float scale = 1.0f);
+		ProxyModel(const ProxyModel&) = delete;
+		ProxyModel& operator=(const ProxyModel&) = delete;
+		ProxyModel(ProxyModel&&) = delete;
+		ProxyModel& operator=(ProxyModel&&) = delete;
 		~ProxyModel();
 
 		const glm::vec3& Position() const;
@@ -23,7 +27,7 @@ namespace Library
 
 		bool& DisplayWireframe();
 
-		void SetPosition(FLOAT x, FLOAT y, FLOAT z);
+		void SetPosition(float x, float y, float z);
         void SetPosition(const glm::vec3& position);
 
         void ApplyRotation(const glm::mat4& transform);
@@ -33,24 +37,18 @@ namespace Library
 		virtual void Draw(const GameTime& gameTime) override;
 
 	private:
-		ProxyModel();
-		ProxyModel(const ProxyModel& rhs);
-		ProxyModel& operator=(const ProxyModel& rhs);
-
+		glm::mat4 mWorldMatrix;
+		glm::mat4 mScaleMatrix;
+		glm::vec3 mPosition;
+		glm::vec3 mDirection;
+		glm::vec3 mUp;
+		glm::vec3 mRight;				
 		std::string mModelFileName;
-		BasicEffect mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
-		UINT mIndexCount;
-        
-		glm::mat4 mWorldMatrix;
-		glm::mat4 mScaleMatrix;
-
+		std::uint32_t mIndexCount;				
 		bool mDisplayWireframe;
-		glm::vec3 mPosition;
-		glm::vec3 mDirection;
-        glm::vec3 mUp;
-        glm::vec3 mRight;
+		BasicEffect mShaderProgram;
 	};
 }

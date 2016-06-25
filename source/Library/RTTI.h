@@ -1,69 +1,87 @@
 #pragma once
 
+#include <windows.h>
 #include <string>
+#include <cstdint>
 
 namespace Library
 {
-    class RTTI
-    {
-    public:
-        virtual const unsigned int& TypeIdInstance() const = 0;
-        
-        virtual RTTI* QueryInterface(const unsigned id) const
-        {
-            return nullptr;
-        }
+	class RTTI
+	{
+	public:
+		virtual ~RTTI() = default;
 
-        virtual bool Is(const unsigned int id) const
-        {
-            return false;
-        }
+		virtual std::uint64_t TypeIdInstance() const = 0;
 
-        virtual bool Is(const std::string& name) const
-        {
-            return false;
-        }
+		virtual RTTI* QueryInterface(const std::uint64_t id) const
+		{
+			UNREFERENCED_PARAMETER(id);
+			return nullptr;
+		}
 
-        template <typename T>
-        T* As() const
-        {
-            if (Is(T::TypeIdClass()))
-            {
-                return (T*)this;
-            }
+		virtual bool Is(std::uint64_t id) const
+		{
+			UNREFERENCED_PARAMETER(id);
+			return false;
+		}
 
-            return nullptr;
-        }
-    };
+		virtual bool Is(const std::string& name) const
+		{
+			UNREFERENCED_PARAMETER(name);
+			return false;
+		}
 
-    #define RTTI_DECLARATIONS(Type, ParentType)                                                              \
-        public:                                                                                              \
-            static std::string TypeName() { return std::string(#Type); }                                     \
-            virtual const unsigned int& TypeIdInstance() const { return Type::TypeIdClass(); }               \
-            static  const unsigned int& TypeIdClass() { return sRunTimeTypeId; }                             \
-            virtual Library::RTTI* QueryInterface( const unsigned int id ) const                             \
+		template <typename T>
+		T* As() const
+		{
+			if (Is(T::TypeIdClass()))
+			{
+				return (T*)this;
+			}
+
+			return nullptr;
+		}
+
+		virtual std::string ToString() const
+		{
+			return "RTTI";
+		}
+
+		virtual bool Equals(const RTTI* rhs) const
+		{
+			return this == rhs;
+		}
+	};
+
+#define RTTI_DECLARATIONS(Type, ParentType)																	 \
+		public:                                                                                              \
+			typedef ParentType Parent;                                                                       \
+			static std::string TypeName() { return std::string(#Type); }                                     \
+			static std::uint64_t TypeIdClass() { return sRunTimeTypeId; }                                    \
+			virtual std::uint64_t TypeIdInstance() const override { return Type::TypeIdClass(); }            \
+			virtual Library::RTTI* QueryInterface(const std::uint64_t id) const override                     \
             {                                                                                                \
                 if (id == sRunTimeTypeId)                                                                    \
-                    { return (RTTI*)this; }                                                                  \
+					{ return (RTTI*)this; }                                                                  \
                 else                                                                                         \
-                    { return ParentType::QueryInterface(id); }                                               \
+					{ return Parent::QueryInterface(id); }                                                   \
             }                                                                                                \
-            virtual bool Is(const unsigned int id) const                                                     \
-            {                                                                                                \
-                if (id == sRunTimeTypeId)                                                                    \
-                    { return true; }                                                                         \
-                else                                                                                         \
-                    { return ParentType::Is(id); }                                                           \
-            }                                                                                                \
-            virtual bool Is(const std::string& name) const                                                   \
-            {                                                                                                \
-                if (name == TypeName())                                                                      \
-                    { return true; }                                                                         \
-                else                                                                                         \
-                    { return ParentType::Is(name); }                                                         \
-            }                                                                                                \
-       private:                                                                                              \
-            static unsigned int sRunTimeTypeId;
+			virtual bool Is(std::uint64_t id) const override                                                 \
+			{                                                                                                \
+				if (id == sRunTimeTypeId)                                                                    \
+					{ return true; }                                                                         \
+				else                                                                                         \
+					{ return Parent::Is(id); }                                                               \
+			}                                                                                                \
+			virtual bool Is(const std::string& name) const override                                          \
+			{                                                                                                \
+				if (name == TypeName())                                                                      \
+					{ return true; }                                                                         \
+				else                                                                                         \
+					{ return Parent::Is(name); }                                                             \
+			}                                                                                                \
+			private:                                                                                         \
+				static std::uint64_t sRunTimeTypeId;
 
-    #define RTTI_DEFINITIONS(Type) unsigned int Type::sRunTimeTypeId = (unsigned int)& Type::sRunTimeTypeId;
+#define RTTI_DEFINITIONS(Type) std::uint64_t Type::sRunTimeTypeId = reinterpret_cast<std::uint64_t>(&Type::sRunTimeTypeId);
 }

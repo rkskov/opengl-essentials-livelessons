@@ -1,9 +1,9 @@
-#include "GameException.h"
+#include "pch.h"
 
 namespace Library
 {
-	GameException::GameException(const char* const& message, HRESULT hr)
-		: exception(message), mHR(hr)
+	GameException::GameException(const char* const& message, HRESULT hr) :
+		exception(message), mHR(hr)
 	{
 	}
 

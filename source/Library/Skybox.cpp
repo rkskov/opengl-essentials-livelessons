@@ -1,15 +1,4 @@
-#include "Skybox.h"
-#include "Game.h"
-#include "GameException.h"
-#include "Camera.h"
-#include "VectorHelper.h"
-#include "MatrixHelper.h"
-#include "ColorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "Utility.h"
-#include "VertexDeclarations.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -17,11 +6,10 @@ namespace Library
 {
 	RTTI_DEFINITIONS(Skybox)
 
-	Skybox::Skybox(Game& game, Camera& camera, const std::string& posXFilename, const std::string& negXFilename, const std::string& posYFilename, const std::string& negYFilename, const std::string& posZFilename, const std::string& negZFilename, float scale)
-		: DrawableGameComponent(game, camera),
+	Skybox::Skybox(Game& game, Camera& camera, const std::string& posXFilename, const std::string& negXFilename, const std::string& posYFilename, const std::string& negYFilename, const std::string& posZFilename, const std::string& negZFilename, float scale) :
+		DrawableGameComponent(game, camera),
 		mPosXFilename(posXFilename), mNegXFilename(negXFilename), mPosYFilename(posYFilename), mNegYFilename(negYFilename), mPosZFilename(posZFilename), mNegZFilename(negZFilename),
-		mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mIndexCount(0), mSkyboxTexture(0), mWorldMatrix(), mScaleMatrix()
+		mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0), mIndexBuffer(0), mIndexCount(0), mSkyboxTexture(0)
 	{
 		mScaleMatrix = glm::scale(mat4(), vec3(scale));
 	}
@@ -45,7 +33,7 @@ namespace Library
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\Skybox.frag"));
 		mShaderProgram.BuildProgram(shaders);
 
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj"));
+		std::unique_ptr<Model> model(new Model("Content\\Models\\Sphere.obj"));
 
 		// Create the vertex and index buffers
 		Mesh* mesh = model->Meshes().at(0);
@@ -73,11 +61,15 @@ namespace Library
 
 	void Skybox::Update(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		mWorldMatrix = translate(mat4(), mCamera->Position()) * mScaleMatrix;
 	}
 
 	void Skybox::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);

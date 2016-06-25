@@ -1,4 +1,4 @@
-#include "PointLight.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -8,12 +8,8 @@ namespace Library
 
 	const float PointLight::DefaultRadius = 10.0f;
 
-	PointLight::PointLight(Game& game)
-		: Light(game), mPosition(0), mRadius(DefaultRadius)
-	{
-	}
-
-	PointLight::~PointLight()
+	PointLight::PointLight(Game& game) :
+		Light(game), mPosition(0), mRadius(DefaultRadius)
 	{
 	}
 
@@ -27,7 +23,7 @@ namespace Library
 		return mRadius;
 	}
 
-	void PointLight::SetPosition(FLOAT x, FLOAT y, FLOAT z)
+	void PointLight::SetPosition(float x, float y, float z)
     {
 		mPosition = vec3(x, y, z);
     }

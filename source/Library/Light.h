@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Common.h"
 #include "GameComponent.h"
+#include "glm/glm.hpp"
 
 namespace Library
 {
@@ -11,10 +11,14 @@ namespace Library
 
 	public:
 		Light(Game& game);
-		virtual ~Light();
+		Light(const Light&) = default;
+		Light& operator=(const Light&) = default;
+		Light(Light&&) = default;
+		Light& operator=(Light&&) = default;		
+		virtual ~Light() = default;
 
 		const glm::vec4& Color() const;
-		void SetColor(FLOAT r, FLOAT g, FLOAT b, FLOAT a);
+		void SetColor(float r, float g, float b, float a);
 		void SetColor(const glm::vec4& color);
 
 	protected:

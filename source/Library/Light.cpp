@@ -1,31 +1,27 @@
-#include "Light.h"
-#include "ColorHelper.h"
+#include "pch.h"
+
+using namespace glm;
 
 namespace Library
 {
 	RTTI_DEFINITIONS(Light)
 
-	Light::Light(Game& game)
-		: GameComponent(game), mColor(ColorHelper::White)
+	Light::Light(Game& game) :
+		GameComponent(game), mColor(ColorHelper::White)
 	{
 	}
 
-	Light::~Light()
-	{
-	}
-
-	const glm::vec4& Light::Color() const
+	const vec4& Light::Color() const
 	{
 		return mColor;
 	}
 
-	void Light::SetColor(FLOAT r, FLOAT g, FLOAT b, FLOAT a)
+	void Light::SetColor(float r, float g, float b, float a)
 	{
-		glm::vec4 color(r, g, b, a);
-		SetColor(color);
+		SetColor(vec4(r, g, b, a));
 	}
 
-	void Light::SetColor(const glm::vec4& color)
+	void Light::SetColor(const vec4& color)
 	{
 		mColor = color;
 	}

@@ -1,11 +1,4 @@
-#include "Grid.h"
-#include "Game.h"
-#include "GameException.h"
-#include "Camera.h"
-#include "ColorHelper.h"
-#include "VectorHelper.h"
-#include "Utility.h"
-#include "VertexDeclarations.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -17,19 +10,11 @@ namespace Library
 	const GLuint Grid::DefaultScale = 16;
 	const vec4 Grid::DefaultColor = vec4(0.961f, 0.871f, 0.702f, 1.0f);
 
-	Grid::Grid(Game& game, Camera& camera)
-		: DrawableGameComponent(game), mVertexArrayObject(0), mVertexBuffer(0),
-		  mPosition(Vector3Helper::Zero), mSize(DefaultSize), mScale(DefaultScale), mColor(DefaultColor),
-		  mWorldMatrix(), mVertexCount(0)
+	Grid::Grid(Game& game, Camera& camera, GLuint size, GLuint scale, const vec4& color) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
+		mPosition(Vector3Helper::Zero), mSize(size), mScale(scale), mColor(color),
+		mVertexCount(0)
 	{
-		mCamera = &camera;
-	}
-
-	Grid::Grid(Game& game, Camera& camera, GLuint size, GLuint scale, const vec4& color)
-		: DrawableGameComponent(game), mVertexArrayObject(0), mVertexBuffer(0),
-		  mPosition(Vector3Helper::Zero), mSize(size), mScale(scale), mColor(color), mWorldMatrix()
-	{
-		mCamera = &camera;
 	}
 	
 	Grid::~Grid()
@@ -108,6 +93,8 @@ namespace Library
 
 	void Grid::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 	

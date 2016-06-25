@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Common.h"
 #include "GameComponent.h"
 
 namespace Library
@@ -15,7 +14,11 @@ namespace Library
 		DrawableGameComponent();
 		DrawableGameComponent(Game& game);
 		DrawableGameComponent(Game& game, Camera& camera);
-		virtual ~DrawableGameComponent();
+		DrawableGameComponent(const DrawableGameComponent& rhs) = delete;
+		DrawableGameComponent& operator=(const DrawableGameComponent& rhs) = delete;
+		DrawableGameComponent(DrawableGameComponent&& rhs) = delete;
+		DrawableGameComponent& operator=(DrawableGameComponent&& rhs) = delete;
+		virtual ~DrawableGameComponent() = default;
 
 		bool Visible() const;
 		void SetVisible(bool visible);
@@ -28,9 +31,7 @@ namespace Library
 	protected:
 		bool mVisible;
 		Camera* mCamera;
-
-	private:
-		DrawableGameComponent(const DrawableGameComponent& rhs);
-		DrawableGameComponent& operator=(const DrawableGameComponent& rhs);
 	};
 }
+
+#include "DrawableGameComponent.inl"

@@ -1,14 +1,4 @@
-#include "ProxyModel.h"
-#include "Game.h"
-#include "GameException.h"
-#include "Camera.h"
-#include "VectorHelper.h"
-#include "MatrixHelper.h"
-#include "ColorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "Utility.h"
-#include "VertexDeclarations.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -16,11 +6,11 @@ namespace Library
 {
 	RTTI_DEFINITIONS(ProxyModel)
 
-	ProxyModel::ProxyModel(Game& game, Camera& camera, const std::string& modelFileName, float scale)
-		: DrawableGameComponent(game, camera),
-		  mModelFileName(modelFileName), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		  mIndexBuffer(0), mIndexCount(0), mWorldMatrix(), mScaleMatrix(), mDisplayWireframe(true),
-		  mPosition(Vector3Helper::Zero), mDirection(Vector3Helper::Forward), mUp(Vector3Helper::Up), mRight(Vector3Helper::Right)
+	ProxyModel::ProxyModel(Game& game, Camera& camera, const std::string& modelFileName, float scale) :
+		DrawableGameComponent(game, camera),
+		mModelFileName(modelFileName), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mIndexCount(0), mDisplayWireframe(true), mPosition(Vector3Helper::Zero),
+		mDirection(Vector3Helper::Forward), mUp(Vector3Helper::Up), mRight(Vector3Helper::Right)
 	{
 		mScaleMatrix = glm::scale(mat4(), vec3(scale));
 	}
@@ -57,7 +47,7 @@ namespace Library
 		return mDisplayWireframe;
 	}
 
-	void ProxyModel::SetPosition(FLOAT x, FLOAT y, FLOAT z)
+	void ProxyModel::SetPosition(float x, float y, float z)
     {
 		mPosition = vec3(x, y, z);
     }
@@ -70,10 +60,10 @@ namespace Library
 	void ProxyModel::ApplyRotation(const mat4& transform)
 	{
 		vec4 direction = transform * vec4(mDirection, 0.0f);
-		mDirection = (vec3)normalize(direction);
+		mDirection = static_cast<vec3>(normalize(direction));
 
 		vec4 up = transform * vec4(mUp, 0.0f);
-		mUp = (vec3)normalize(up);
+		mUp = static_cast<vec3>(normalize(up));
 
 		mRight = cross(mDirection, mUp);
 		mUp = cross(mRight, mDirection);
@@ -89,7 +79,7 @@ namespace Library
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\BasicEffect.frag"));
 		mShaderProgram.BuildProgram(shaders);
 
-		std::unique_ptr<Model> model(new Model(*mGame, mModelFileName, true));
+		std::unique_ptr<Model> model(new Model(mModelFileName, true));
 
 		// Create the vertex and index buffers
 		Mesh* mesh = model->Meshes().at(0);
@@ -105,6 +95,8 @@ namespace Library
 
 	void ProxyModel::Update(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		mat4 worldMatrix;
 		MatrixHelper::SetForward(worldMatrix, mDirection);
 		MatrixHelper::SetUp(worldMatrix, mUp);
@@ -116,6 +108,8 @@ namespace Library
 
 	void ProxyModel::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);

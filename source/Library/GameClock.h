@@ -1,33 +1,27 @@
 #pragma once
 
-#include <windows.h>
 #include <exception>
+#include <chrono>
 
 namespace Library
 {
 	class GameTime;
 
-	class GameClock
+	class GameClock final
 	{
 	public:
 		GameClock();
 
-		const LARGE_INTEGER& StartTime() const;
-		const LARGE_INTEGER& CurrentTime() const;
-		const LARGE_INTEGER& LastTime() const;
+		const std::chrono::high_resolution_clock::time_point& StartTime() const;
+		const std::chrono::high_resolution_clock::time_point& CurrentTime() const;
+		const std::chrono::high_resolution_clock::time_point& LastTime() const;
 
 		void Reset();
-		double GetFrequency() const;
-		void GetTime(LARGE_INTEGER& time) const;
 		void UpdateGameTime(GameTime& gameTime);
 
 	private:
-		GameClock(const GameClock& rhs);
-		GameClock& operator=(const GameClock& rhs);
-
-		LARGE_INTEGER mStartTime;
-		LARGE_INTEGER mCurrentTime;
-		LARGE_INTEGER mLastTime;
-		double mFrequency;
+		std::chrono::high_resolution_clock::time_point mStartTime;
+		std::chrono::high_resolution_clock::time_point mCurrentTime;
+		std::chrono::high_resolution_clock::time_point mLastTime;
 	};
 }

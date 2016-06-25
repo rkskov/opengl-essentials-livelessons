@@ -60,5 +60,6 @@
     <None Include="Content\Effects\PointLightDemo.vert">
       <Filter>Content\Effects</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

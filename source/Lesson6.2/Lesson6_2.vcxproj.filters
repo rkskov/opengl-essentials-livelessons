@@ -60,5 +60,6 @@
     <None Include="Content\Effects\FogDemo.frag">
       <Filter>Content\Effects</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
