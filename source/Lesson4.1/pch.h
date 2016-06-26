@@ -8,7 +8,9 @@
 #include <crtdbg.h>
 #include <memory>
 #include <vector>
+#include <map>
 #include <algorithm>
+#include <chrono>
 
 #if defined(DEBUG) || defined(_DEBUG)
 #define _CRTDBG_MAP_ALLOC

@@ -1,13 +1,4 @@
-#include "WrappingModesDemo.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "VectorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -15,10 +6,10 @@ namespace Rendering
 {
 	RTTI_DEFINITIONS(WrappingModesDemo)
 
-	WrappingModesDemo::WrappingModesDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mWorldMatrix(), mIndexCount(), mColorTexture(0),
-		mTextureSamplers(), mTextureSamplersByWrappingMode(), mActiveWrappingMode(WrappingModeRepeat), mKeyboardHandler(nullptr)
+	WrappingModesDemo::WrappingModesDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mIndexCount(0), mColorTexture(0),
+		mActiveWrappingMode(WrappingMode::Repeat), mKeyboardHandler(nullptr)
 	{
 	}
 
@@ -81,36 +72,36 @@ namespace Rendering
 		}
 
 		// Configure the texture samplers
-		mTextureSamplers.resize(WrappingModeEnd);
+		mTextureSamplers.resize(static_cast<size_t>(WrappingMode::End));
 		glGenSamplers(mTextureSamplers.size(), &mTextureSamplers[0]);
 
-		for (WrappingMode mode = (WrappingMode)0; mode < WrappingModeEnd; mode = (WrappingMode)(mode + 1))
+		for (WrappingMode mode = static_cast<WrappingMode>(0); mode < WrappingMode::End; mode = static_cast<WrappingMode>((static_cast<int>(mode) + 1)))
 		{
-			mTextureSamplersByWrappingMode[mode] = mTextureSamplers[mode];
+			mTextureSamplersByWrappingMode[mode] = mTextureSamplers[static_cast<int>(mode)];
 		}
 
-		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingModeRepeat], GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingModeRepeat], GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingMode::Repeat], GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingMode::Repeat], GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingModeMirroredRepeat], GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingModeMirroredRepeat], GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingMode::MirroredRepeat], GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingMode::MirroredRepeat], GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 
-		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingModeClampToEdge], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingModeClampToEdge], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingMode::ClampToEdge], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingMode::ClampToEdge], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingModeClampToBorder], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingModeClampToBorder], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		glSamplerParameterfv(mTextureSamplersByWrappingMode[WrappingModeClampToBorder], GL_TEXTURE_BORDER_COLOR, &ColorHelper::Purple[0]);
+		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingMode::ClampToBorder], GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glSamplerParameteri(mTextureSamplersByWrappingMode[WrappingMode::ClampToBorder], GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glSamplerParameterfv(mTextureSamplersByWrappingMode[WrappingMode::ClampToBorder], GL_TEXTURE_BORDER_COLOR, &ColorHelper::Purple[0]);
 
 		// Create the vertex array object
 		glGenVertexArrays(1, &mVertexArrayObject);
 		glBindVertexArray(mVertexArrayObject);
 
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
-		glVertexAttribPointer(VertexAttributeTextureCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
-		glEnableVertexAttribArray(VertexAttributeTextureCoordinate);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::TextureCoordinate));
 
 		glBindVertexArray(0);
 
@@ -122,6 +113,8 @@ namespace Rendering
 
 	void WrappingModesDemo::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
@@ -157,12 +150,15 @@ namespace Rendering
 
 	void WrappingModesDemo::OnKey(int key, int scancode, int action, int mods)
 	{
+		UNREFERENCED_PARAMETER(scancode);
+		UNREFERENCED_PARAMETER(mods);
+
 		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		{
-			WrappingMode activeMode = WrappingMode(mActiveWrappingMode + 1);
-			if (activeMode >= WrappingModeEnd)
+			WrappingMode activeMode = WrappingMode(static_cast<int>(mActiveWrappingMode) + 1);
+			if (static_cast<int>(activeMode) >= static_cast<int>(WrappingMode::End))
 			{
-				activeMode = (WrappingMode)(0);
+				activeMode = static_cast<WrappingMode>(0);
 			}
 
 			mActiveWrappingMode = activeMode;

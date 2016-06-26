@@ -22,6 +22,7 @@
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "SOIL.h"
 
 // Library
 #include "GameException.h"
@@ -40,7 +41,7 @@
 
 // Local
 #include "RenderingGame.h"
-#include "ModelDemo.h"
+#include "WrappingModesDemo.h"
 
 //TODO: remove
 #define DeleteObject(object) if((object) != NULL) { delete object; object = NULL; }
