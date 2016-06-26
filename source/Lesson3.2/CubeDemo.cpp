@@ -1,12 +1,4 @@
-#include "CubeDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "VertexDeclarations.h"
-#include "VectorHelper.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -14,11 +6,11 @@ namespace Rendering
 {
 	RTTI_DEFINITIONS(CubeDemo)
 
-	const GLfloat CubeDemo::RotationRate = 180.0f;
+	const GLfloat CubeDemo::RotationRate = radians(180.0f);
 
-	CubeDemo::CubeDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mWorldMatrix()
+	CubeDemo::CubeDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mWorldViewProjectionLocation(-1)
 	{
 	}
 
@@ -86,11 +78,11 @@ namespace Rendering
 		glGenVertexArrays(1, &mVertexArrayObject);
 		glBindVertexArray(mVertexArrayObject);
 
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionColor), (void*)offsetof(VertexPositionColor, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionColor), (void*)offsetof(VertexPositionColor, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
-		glVertexAttribPointer(VertexAttributeColor, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionColor), (void*)offsetof(VertexPositionColor, Color));
-		glEnableVertexAttribArray(VertexAttributeColor);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Color), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionColor), (void*)offsetof(VertexPositionColor, Color));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Color));
 
 		glBindVertexArray(0);
 
@@ -105,13 +97,15 @@ namespace Rendering
 	{
 		static float angle = 0.0f;
 
-		angle += static_cast<float>(gameTime.ElapsedGameTime()) * RotationRate;
+		angle += gameTime.ElapsedGameTimeSeconds().count() * RotationRate;
 
-		mWorldMatrix = glm::rotate(glm::mat4(), angle, Vector3Helper::Up);
+		mWorldMatrix = rotate(mat4(), angle, Vector3Helper::Up);
 	}
 
 	void CubeDemo::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);

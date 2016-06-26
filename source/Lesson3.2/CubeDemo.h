@@ -13,6 +13,10 @@ namespace Rendering
 
 	public:		
 		CubeDemo(Game& game, Camera& camera);
+		CubeDemo(const CubeDemo&) = delete;
+		CubeDemo& operator=(const CubeDemo&) = delete;
+		CubeDemo(CubeDemo&&) = delete;
+		CubeDemo& operator=(CubeDemo&&) = delete;
 		~CubeDemo();
 
 		virtual void Initialize() override;
@@ -20,23 +24,19 @@ namespace Rendering
 		virtual void Draw(const GameTime& gameTime) override;
 
 	private:
-		enum VertexAttribute
+		enum class VertexAttribute
 		{
-			VertexAttributePosition = 0,
-			VertexAttributeColor = 1
+			Position = 0,
+			Color = 1
 		};
-
-		CubeDemo();
-		CubeDemo(const CubeDemo& rhs);
-		CubeDemo& operator=(const CubeDemo& rhs);
 
 		static const GLfloat RotationRate;
 
+		glm::mat4 mWorldMatrix;
 		ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
-		GLint mWorldViewProjectionLocation;
-		glm::mat4 mWorldMatrix;
+		GLint mWorldViewProjectionLocation;		
 	};
 }
