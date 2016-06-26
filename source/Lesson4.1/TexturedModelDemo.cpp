@@ -1,24 +1,15 @@
-#include "TexturedModelDemo.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "VertexDeclarations.h"
-#include "VectorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(TexturedModelDemo)
 
-	TexturedModelDemo::TexturedModelDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mKeyboardHandler(nullptr), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mWorldMatrix(), mIndexCount(), mColorTexture(0),
+	TexturedModelDemo::TexturedModelDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mKeyboardHandler(nullptr), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mIndexCount(0), mColorTexture(0),
 		mAltTexture(0), mActiveTexture(0)
 	{
 	}
@@ -32,7 +23,6 @@ namespace Rendering
 		glDeleteVertexArrays(1, &mVertexArrayObject);
 
 		mGame->RemoveKeyboardHandler(mKeyboardHandler);
-
 	}
 
 	void TexturedModelDemo::Initialize()
@@ -40,16 +30,16 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\TexturedModelDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\TexturedModelDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
 		
 		// Load the model
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
+		Model model("Content\\Models\\Sphere.obj", true);
 
 		// Create the vertex and index buffers
-		Mesh* mesh = model->Meshes().at(0);
+		Mesh* mesh = model.Meshes().at(0);
 		CreateVertexBuffer(*mesh, mVertexBuffer);
 		mesh->CreateIndexBuffer(mIndexBuffer);
 		mIndexCount = mesh->Indices().size();
@@ -79,21 +69,23 @@ namespace Rendering
 		glGenVertexArrays(1, &mVertexArrayObject);
 		glBindVertexArray(mVertexArrayObject);
 
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
-		glVertexAttribPointer(VertexAttributeTextureCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
-		glEnableVertexAttribArray(VertexAttributeTextureCoordinate);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::TextureCoordinate));
 
 		glBindVertexArray(0);
 
 		using namespace std::placeholders;
-		mKeyboardHandler = std::bind(&TexturedModelDemo::OnKey, this, _1, _2, _3, _4);
+		mKeyboardHandler = bind(&TexturedModelDemo::OnKey, this, _1, _2, _3, _4);
 		mGame->AddKeyboardHandler(mKeyboardHandler);
 	}
 
 	void TexturedModelDemo::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);		
@@ -113,18 +105,18 @@ namespace Rendering
 
 	void TexturedModelDemo::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer)
 	{
-		const std::vector<vec3>& sourceVertices = mesh.Vertices();
+		const vector<vec3>& sourceVertices = mesh.Vertices();
 
-		std::vector<VertexPositionTexture> vertices;
+		vector<VertexPositionTexture> vertices;
 		vertices.reserve(sourceVertices.size());
 
-		std::vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
+		vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
 		assert(textureCoordinates->size() == sourceVertices.size());
 
 		for (UINT i = 0; i < sourceVertices.size(); i++)
 		{
-			vec3 position = sourceVertices.at(i);
-			vec2 uv = (vec2)textureCoordinates->at(i);
+			const vec3& position = sourceVertices.at(i);
+			const vec2& uv = static_cast<vec2>(textureCoordinates->at(i));
 			vertices.push_back(VertexPositionTexture(vec4(position.x, position.y, position.z, 1.0f), uv));
 		}
 
@@ -135,6 +127,9 @@ namespace Rendering
 
 	void TexturedModelDemo::OnKey(int key, int scancode, int action, int mods)
 	{
+		UNREFERENCED_PARAMETER(scancode);
+		UNREFERENCED_PARAMETER(mods);
+
 		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		{
 			if (mActiveTexture == mColorTexture)

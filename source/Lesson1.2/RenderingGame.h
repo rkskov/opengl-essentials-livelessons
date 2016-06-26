@@ -9,7 +9,7 @@ namespace Library
 
 namespace Rendering
 {
-	class RenderingGame : public Library::Game
+	class RenderingGame final : public Library::Game
 	{
 		RTTI_DECLARATIONS(RenderingGame, Library::Game)
 
