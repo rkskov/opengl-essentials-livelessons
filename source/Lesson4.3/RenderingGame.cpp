@@ -1,11 +1,4 @@
-#include "RenderingGame.h"
-#include "GameException.h"
-#include "FirstPersonCamera.h"
-#include "ColorHelper.h"
-#include "VectorHelper.h"
-#include "Grid.h"
-
-#include "FilteringModesDemo.h"
+#include "pch.h"
 
 using namespace glm;
 
@@ -13,10 +6,9 @@ namespace Rendering
 {
 	RTTI_DEFINITIONS(RenderingGame)
 
-	RenderingGame::RenderingGame(HINSTANCE instance, const std::wstring& windowTitle)
-		:  Game(instance, windowTitle),
-		mCamera(nullptr), mKeyboardHandler(nullptr),
-		mFilteringModesDemo(nullptr)
+	RenderingGame::RenderingGame(HINSTANCE instance, const std::wstring& windowTitle) :
+		Game(instance, windowTitle),
+		mCamera(nullptr), mKeyboardHandler(nullptr), mFilteringModesDemo(nullptr)
 	{
 		mDepthStencilBufferEnabled = true;
 	}
@@ -67,6 +59,9 @@ namespace Rendering
 
 	void RenderingGame::OnKey(int key, int scancode, int action, int mods)
 	{
+		UNREFERENCED_PARAMETER(scancode);
+		UNREFERENCED_PARAMETER(mods);
+
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		{
 			Exit();

@@ -2,68 +2,64 @@
 
 #include "DrawableGameComponent.h"
 #include "ShaderProgram.h"
-#include "VertexDeclarations.h"
 #include "Game.h"
 
 namespace Library
 {
-	class Mesh;
+	class VertexPositionTexture;
 }
-
-using namespace Library;
-
 namespace Rendering
 {
-	class FilteringModesDemo : public DrawableGameComponent
+	class FilteringModesDemo final : public DrawableGameComponent
 	{
 		RTTI_DECLARATIONS(FilteringModesDemo, DrawableGameComponent)
 
 	public:		
-		FilteringModesDemo(Game& game, Camera& camera);
+		FilteringModesDemo(Library::Game& game, Library::Camera& camera);
+		FilteringModesDemo(const FilteringModesDemo&) = delete;
+		FilteringModesDemo& operator=(const FilteringModesDemo&) = delete;
+		FilteringModesDemo(FilteringModesDemo&&) = delete;
+		FilteringModesDemo& operator=(FilteringModesDemo&&) = delete;
 		~FilteringModesDemo();
 
 		virtual void Initialize() override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		enum VertexAttribute
+		enum class VertexAttribute
 		{
-			VertexAttributePosition = 0,
-			VertexAttributeTextureCoordinate = 1
+			Position = 0,
+			TextureCoordinate = 1
 		};
 
-		enum FilteringMode
+		enum class FilteringMode
 		{
-			FilteringModePoint = 0,
-			FilteringModeLinear,
-			FilteringModePointMipMapPoint,
-			FilteringModeLinearMipMapPoint,
-			FilteringModePointMipMapLinear,
-			FilteringModeTriLinear,
-			FilteringModeEnd
+			Point = 0,
+			Linear,
+			PointMipMapPoint,
+			LinearMipMapPoint,
+			PointMipMapLinear,
+			TriLinear,
+			End
 		};
 
-		static const std::string FilteringModeNames[];
+		static const std::string FilteringModeNames[];		
 
-		FilteringModesDemo();
-		FilteringModesDemo(const FilteringModesDemo& rhs);
-		FilteringModesDemo& operator=(const FilteringModesDemo& rhs);
-
-		void CreateVertexBuffer(VertexPositionTexture* vertices, GLuint vertexCount, GLuint& vertexBuffer);
-		void CreateIndexBuffer(UINT* indices, GLuint indexCount, GLuint& indexBuffer);
+		void CreateVertexBuffer(Library::VertexPositionTexture* vertices, GLuint vertexCount, GLuint& vertexBuffer);
+		void CreateIndexBuffer(std::uint32_t* indices, GLuint indexCount, GLuint& indexBuffer);
 		void OnKey(int key, int scancode, int action, int mods);
 		void OutputFilteringMode();
 
-		ShaderProgram mShaderProgram;
+		glm::mat4 mWorldMatrix;
+		std::vector<GLuint> mTextureSamplers;
+		std::map<FilteringMode, GLuint> mTextureSamplersByFilteringMode;
+		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
 		GLint mWorldViewProjectionLocation;
-		glm::mat4 mWorldMatrix;
 		GLuint mIndexCount;
 		GLuint mColorTexture;
-		std::vector<GLuint> mTextureSamplers;
-		std::map<FilteringMode, GLuint> mTextureSamplersByFilteringMode;
 		FilteringMode mActiveFilteringMode;
 		Game::KeyboardHandler mKeyboardHandler;
 	};

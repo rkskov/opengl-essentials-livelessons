@@ -2,15 +2,12 @@
 
 #include "DrawableGameComponent.h"
 #include "ShaderProgram.h"
-#include "VertexDeclarations.h"
 #include "Game.h"
 
 namespace Library
 {
-	class Mesh;
+	class VertexPositionTexture;
 }
-
-using namespace Library;
 
 namespace Rendering
 {
@@ -19,7 +16,7 @@ namespace Rendering
 		RTTI_DECLARATIONS(WrappingModesDemo, DrawableGameComponent)
 
 	public:		
-		WrappingModesDemo(Game& game, Camera& camera);
+		WrappingModesDemo(Library::Game& game, Library::Camera& camera);
 		WrappingModesDemo(const WrappingModesDemo&) = delete;
 		WrappingModesDemo& operator=(const WrappingModesDemo&) = delete;
 		WrappingModesDemo(WrappingModesDemo&&) = delete;
@@ -27,7 +24,7 @@ namespace Rendering
 		~WrappingModesDemo();
 
 		virtual void Initialize() override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
 		enum class VertexAttribute
@@ -45,14 +42,14 @@ namespace Rendering
 			End
 		};
 
-		void CreateVertexBuffer(VertexPositionTexture* vertices, GLuint vertexCount, GLuint& vertexBuffer);
+		void CreateVertexBuffer(Library::VertexPositionTexture* vertices, GLuint vertexCount, GLuint& vertexBuffer);
 		void CreateIndexBuffer(std::uint32_t* indices, GLuint indexCount, GLuint& indexBuffer);
 		void OnKey(int key, int scancode, int action, int mods);
 
 		glm::mat4 mWorldMatrix;
 		std::vector<GLuint> mTextureSamplers;
 		std::map<WrappingMode, GLuint> mTextureSamplersByWrappingMode;
-		ShaderProgram mShaderProgram;
+		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;

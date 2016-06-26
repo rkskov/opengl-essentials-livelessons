@@ -1,35 +1,27 @@
-#include "FilteringModesDemo.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "VectorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "SOIL.h"
-#include <sstream>
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(FilteringModesDemo)
 
-	const std::string FilteringModesDemo::FilteringModeNames[] =
+	const string FilteringModesDemo::FilteringModeNames[] =
 	{
-		"FilteringModePoint",
-		"FilteringModeLinear",
-		"FilteringModePointMipMapPoint",
-		"FilteringModeLinearMipMapPoint",
-		"FilteringModePointMipMapLinear",
-		"FilteringModeTriLinear",
+		"FilteringMode::Point",
+		"FilteringMode::Linear",
+		"FilteringMode::PointMipMapPoint",
+		"FilteringMode::LinearMipMapPoint",
+		"FilteringMode::PointMipMapLinear",
+		"FilteringMode::TriLinear",
 	};
 
-	FilteringModesDemo::FilteringModesDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mWorldMatrix(), mIndexCount(), mColorTexture(0),
-		mTextureSamplers(), mTextureSamplersByFilteringMode(), mActiveFilteringMode(FilteringModePoint), mKeyboardHandler(nullptr)
+	FilteringModesDemo::FilteringModesDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mIndexCount(0), mColorTexture(0),
+		mActiveFilteringMode(FilteringMode::Point), mKeyboardHandler(nullptr)
 	{
 	}
 
@@ -48,7 +40,7 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\FilteringModesDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\FilteringModesDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
@@ -92,47 +84,47 @@ namespace Rendering
 		}
 
 		// Configure the texture samplers
-		mTextureSamplers.resize(FilteringModeEnd);
+		mTextureSamplers.resize(static_cast<size_t>(FilteringMode::End));
 		glGenSamplers(mTextureSamplers.size(), &mTextureSamplers[0]);
 
-		for (FilteringMode mode = (FilteringMode)0; mode < FilteringModeEnd; mode = (FilteringMode)(mode + 1))
+		for (FilteringMode mode = FilteringMode(0); mode < FilteringMode::End; mode = FilteringMode(static_cast<int>(mode) + 1))
 		{
-			mTextureSamplersByFilteringMode[mode] = mTextureSamplers[mode];
+			mTextureSamplersByFilteringMode[mode] = mTextureSamplers[static_cast<int>(mode)];
 		}
 
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModePoint], GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModePoint], GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::Point], GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::Point], GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModeLinear], GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModeLinear], GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::Linear], GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::Linear], GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModePointMipMapPoint], GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModePointMipMapPoint], GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::PointMipMapPoint], GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::PointMipMapPoint], GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModeLinearMipMapPoint], GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModeLinearMipMapPoint], GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::LinearMipMapPoint], GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::LinearMipMapPoint], GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModePointMipMapLinear], GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModePointMipMapLinear], GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::PointMipMapLinear], GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::PointMipMapLinear], GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModeTriLinear], GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringModeTriLinear], GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::TriLinear], GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glSamplerParameteri(mTextureSamplersByFilteringMode[FilteringMode::TriLinear], GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 		// Create the vertex array object
 		glGenVertexArrays(1, &mVertexArrayObject);
 		glBindVertexArray(mVertexArrayObject);
 
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
-		glVertexAttribPointer(VertexAttributeTextureCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
-		glEnableVertexAttribArray(VertexAttributeTextureCoordinate);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::TextureCoordinate));
 
 		glBindVertexArray(0);
 
 		// Attach the keyboard handler
 		using namespace std::placeholders;
-		mKeyboardHandler = std::bind(&FilteringModesDemo::OnKey, this, _1, _2, _3, _4);
+		mKeyboardHandler = bind(&FilteringModesDemo::OnKey, this, _1, _2, _3, _4);
 		mGame->AddKeyboardHandler(mKeyboardHandler);
 
 #if defined(DEBUG) || defined(_DEBUG)
@@ -142,6 +134,8 @@ namespace Rendering
 
 	void FilteringModesDemo::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
@@ -177,12 +171,15 @@ namespace Rendering
 
 	void FilteringModesDemo::OnKey(int key, int scancode, int action, int mods)
 	{
+		UNREFERENCED_PARAMETER(scancode);
+		UNREFERENCED_PARAMETER(mods);
+
 		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		{
-			FilteringMode activeMode = FilteringMode(mActiveFilteringMode + 1);
-			if (activeMode >= FilteringModeEnd)
+			FilteringMode activeMode = FilteringMode(static_cast<int>(mActiveFilteringMode) + 1);
+			if (activeMode >= FilteringMode::End)
 			{
-				activeMode = (FilteringMode)(0);
+				activeMode = FilteringMode(0);
 			}
 
 			mActiveFilteringMode = activeMode;
@@ -195,8 +192,8 @@ namespace Rendering
 
 	void FilteringModesDemo::OutputFilteringMode()
 	{
-		std::wostringstream message;
-		message << "Active Filtering Mode: " << FilteringModeNames[mActiveFilteringMode].c_str() << "\n";
+		wostringstream message;
+		message << "Active Filtering Mode: " << FilteringModeNames[static_cast<int>(mActiveFilteringMode)].c_str() << "\n";
 		OutputDebugString(message.str().c_str());
 	}
 }

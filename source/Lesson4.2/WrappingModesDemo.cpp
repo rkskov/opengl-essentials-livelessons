@@ -1,6 +1,7 @@
 #include "pch.h"
 
 using namespace glm;
+using namespace std;
 
 namespace Rendering
 {
@@ -28,7 +29,7 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\WrappingModesDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\WrappingModesDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
@@ -75,7 +76,7 @@ namespace Rendering
 		mTextureSamplers.resize(static_cast<size_t>(WrappingMode::End));
 		glGenSamplers(mTextureSamplers.size(), &mTextureSamplers[0]);
 
-		for (WrappingMode mode = static_cast<WrappingMode>(0); mode < WrappingMode::End; mode = static_cast<WrappingMode>((static_cast<int>(mode) + 1)))
+		for (WrappingMode mode = WrappingMode(0); mode < WrappingMode::End; mode = WrappingMode(static_cast<int>(mode) + 1))
 		{
 			mTextureSamplersByWrappingMode[mode] = mTextureSamplers[static_cast<int>(mode)];
 		}
@@ -107,7 +108,7 @@ namespace Rendering
 
 		// Attach the keyboard handler
 		using namespace std::placeholders;
-		mKeyboardHandler = std::bind(&WrappingModesDemo::OnKey, this, _1, _2, _3, _4);
+		mKeyboardHandler = bind(&WrappingModesDemo::OnKey, this, _1, _2, _3, _4);
 		mGame->AddKeyboardHandler(mKeyboardHandler);
 	}
 
@@ -141,7 +142,7 @@ namespace Rendering
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexPositionTexture) * vertexCount, &vertices[0], GL_STATIC_DRAW);
 	}
 
-	void WrappingModesDemo::CreateIndexBuffer(UINT* indices, GLuint indexCount, GLuint& indexBuffer)
+	void WrappingModesDemo::CreateIndexBuffer(uint32_t* indices, GLuint indexCount, GLuint& indexBuffer)
 	{
 		glGenBuffers(1, &indexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -158,7 +159,7 @@ namespace Rendering
 			WrappingMode activeMode = WrappingMode(static_cast<int>(mActiveWrappingMode) + 1);
 			if (static_cast<int>(activeMode) >= static_cast<int>(WrappingMode::End))
 			{
-				activeMode = static_cast<WrappingMode>(0);
+				activeMode = WrappingMode(0);
 			}
 
 			mActiveWrappingMode = activeMode;

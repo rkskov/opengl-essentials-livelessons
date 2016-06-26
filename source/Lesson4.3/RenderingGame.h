@@ -15,7 +15,7 @@ namespace Rendering
 {
 	class FilteringModesDemo;
 
-	class RenderingGame : public Game
+	class RenderingGame final : public Game
 	{
 		RTTI_DECLARATIONS(RenderingGame, Game)
 
