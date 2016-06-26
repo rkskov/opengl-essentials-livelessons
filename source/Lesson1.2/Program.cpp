@@ -14,15 +14,15 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR command
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	std::unique_ptr<RenderingGame> game(new RenderingGame(instance, L"OpenGL Essentials"));	
+	RenderingGame game(instance, L"OpenGL Essentials");
 
 	try
 	{
-		game->Run();
+		game.Run();
 	}
 	catch (GameException ex)
 	{
-		MessageBox(game->WindowHandle(), ex.whatw().c_str(), game->WindowTitle().c_str(), MB_ABORTRETRYIGNORE);
+		MessageBox(game.WindowHandle(), ex.whatw().c_str(), game.WindowTitle().c_str(), MB_ABORTRETRYIGNORE);
 	}
 
 	return 0;

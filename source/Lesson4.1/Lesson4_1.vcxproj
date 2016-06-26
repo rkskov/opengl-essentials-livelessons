@@ -89,8 +89,8 @@ IF EXIST "$(ProjectDir)content" xcopy /E /Y "$(ProjectDir)Content" "$(OutDir)Con
       <ObjectFileOutput>$(OutDir)Content\Effects\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)..\external\freetype\bin\*.dll" "$(TargetDir)"
-copy "$(SolutionDir)..\external\assimp\bin\assimp_debug-dll_win32\*.dll" "$(TargetDir)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,8 +132,8 @@ IF EXIST "$(ProjectDir)content" xcopy /E /Y "$(ProjectDir)Content" "$(OutDir)Con
       <ObjectFileOutput>$(OutDir)Content\Effects\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <PostBuildEvent>
-      <Command>copy "$(SolutionDir)..\external\freetype\bin\*.dll" "$(TargetDir)"
-copy "$(SolutionDir)..\external\assimp\bin\assimp_release-dll_win32\*.dll" "$(TargetDir)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@ using namespace Library;
 
 namespace Rendering
 {
-	class ColoredTriangleDemo : public DrawableGameComponent
+	class ColoredTriangleDemo final : public DrawableGameComponent
 	{
 		RTTI_DECLARATIONS(ColoredTriangleDemo, DrawableGameComponent)
 

@@ -1,16 +1,7 @@
-#include "ModelDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "VertexDeclarations.h"
-#include "VectorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
 
 namespace Rendering
 {
@@ -34,16 +25,16 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\ModelDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\ModelDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
 		
 		// Load the model
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj"));
+		Model model("Content\\Models\\Sphere.obj");
 
 		// Create the vertex and index buffers
-		Mesh* mesh = model->Meshes().at(0);
+		Mesh* mesh = model.Meshes().at(0);
 		CreateVertexBuffer(*mesh, mVertexBuffer);
 		mesh->CreateIndexBuffer(mIndexBuffer);
 		mIndexCount = mesh->Indices().size();
@@ -51,11 +42,11 @@ namespace Rendering
 		glGenVertexArrays(1, &mVertexArrayObject);
 		glBindVertexArray(mVertexArrayObject);
 
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionColor), (void*)offsetof(VertexPositionColor, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionColor), (void*)offsetof(VertexPositionColor, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
-		glVertexAttribPointer(VertexAttributeColor, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionColor), (void*)offsetof(VertexPositionColor, Color));
-		glEnableVertexAttribArray(VertexAttributeColor);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Color), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionColor), (void*)offsetof(VertexPositionColor, Color));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Color));
 
 		glBindVertexArray(0);
 
@@ -68,6 +59,8 @@ namespace Rendering
 
 	void ModelDemo::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
@@ -85,19 +78,19 @@ namespace Rendering
 
 	void ModelDemo::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer)
 	{
-		const std::vector<vec3>& sourceVertices = mesh.Vertices();
+		const vector<vec3>& sourceVertices = mesh.Vertices();
 
-		std::vector<VertexPositionColor> vertices;
+		vector<VertexPositionColor> vertices;
 		vertices.reserve(sourceVertices.size());
 		if (mesh.VertexColors().size() > 0)
 		{
-			std::vector<vec4>* vertexColors = mesh.VertexColors().at(0);
+			vector<vec4>* vertexColors = mesh.VertexColors().at(0);
 			assert(vertexColors->size() == sourceVertices.size());
 
 			for (UINT i = 0; i < sourceVertices.size(); i++)
 			{
-				vec3 position = sourceVertices.at(i);
-				vec4 color = vertexColors->at(i);
+				const vec3& position = sourceVertices.at(i);
+				const vec4& color = vertexColors->at(i);
 				vertices.push_back(VertexPositionColor(vec4(position.x, position.y, position.z, 1.0f), color));
 			}
 		}
@@ -105,8 +98,8 @@ namespace Rendering
 		{
 			for (UINT i = 0; i < sourceVertices.size(); i++)
 			{
-				vec3 position = sourceVertices.at(i);
-				vec4 color = ColorHelper::RandomColor();
+				const vec3& position = sourceVertices.at(i);
+				const vec4& color = ColorHelper::RandomColor();
 				vertices.push_back(VertexPositionColor(vec4(position.x, position.y, position.z, 1.0f), color));
 			}
 		}
