@@ -2,8 +2,6 @@
 
 #include "Game.h"
 
-using namespace Library;
-
 namespace Library
 {
 	class GameTime;
@@ -15,7 +13,7 @@ namespace Rendering
 {
 	class BlinnPhongDemo;
 
-	class RenderingGame : public Game
+	class RenderingGame : public Library::Game
 	{
 		RTTI_DECLARATIONS(RenderingGame, Game)
 
@@ -24,15 +22,15 @@ namespace Rendering
 
 	protected:
 		virtual void Initialize() override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 		virtual void Shutdown() override;
 
 	private:
 		void OnKey(int key, int scancode, int action, int mods);
 
-		FirstPersonCamera* mCamera;
+		Library::FirstPersonCamera* mCamera;
 		KeyboardHandler mKeyboardHandler;
-		Grid* mGrid;
+		Library::Grid* mGrid;
 
 		BlinnPhongDemo* mBlinnPhongDemo;
 	};

@@ -10,46 +10,43 @@ namespace Library
 	class ProxyModel;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class BlinnPhongDemo : public DrawableGameComponent
+	class BlinnPhongDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(BlinnPhongDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(BlinnPhongDemo, Library::DrawableGameComponent)
 
 	public:		
-		BlinnPhongDemo(Game& game, Camera& camera);
+		BlinnPhongDemo(Library::Game& game, Library::Camera& camera);
+		BlinnPhongDemo(const BlinnPhongDemo&) = delete;
+		BlinnPhongDemo& operator=(const BlinnPhongDemo&) = delete;
+		BlinnPhongDemo(BlinnPhongDemo&&) = delete;
+		BlinnPhongDemo& operator=(BlinnPhongDemo&&) = delete;
 		~BlinnPhongDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		BlinnPhongDemo();
-		BlinnPhongDemo(const BlinnPhongDemo& rhs);
-		BlinnPhongDemo& operator=(const BlinnPhongDemo& rhs);
-
-		void UpdateAmbientLight(const GameTime& gameTime);
-		void UpdateDirectionalLight(const GameTime& gameTime);
-		void UpdateSpecularLight(const GameTime& gameTime);
+		void UpdateAmbientLight(const Library::GameTime& gameTime);
+		void UpdateDirectionalLight(const Library::GameTime& gameTime);
+		void UpdateSpecularLight(const Library::GameTime& gameTime);
 
 		static const glm::vec2 LightRotationRate;
 		static const float LightModulationRate;
 
+		glm::mat4 mWorldMatrix;
+		glm::vec4 mSpecularColor;
 		BlinnPhongEffect mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
-		glm::mat4 mWorldMatrix;
 		GLuint mIndexCount;
 		GLuint mColorTexture;
-		Light* mAmbientLight;
-		DirectionalLight* mDirectionalLight;
-		glm::vec4 mSpecularColor;
+		Library::Light* mAmbientLight;
+		Library::DirectionalLight* mDirectionalLight;		
 		float mSpecularPower;
-
-		ProxyModel* mProxyModel;
+		Library::ProxyModel* mProxyModel;
 	};
 }

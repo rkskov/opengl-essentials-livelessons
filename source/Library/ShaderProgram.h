@@ -47,16 +47,16 @@ namespace Library
 		GLuint mProgram;		
 	};
 
-	#define SHADER_VARIABLE_DECLARATION(VariableName)   \
-		public:											\
-		Variable& VariableName() const;					\
-	private:											\
-		Variable* m ## VariableName;
+	#define SHADER_VARIABLE_DECLARATION(VariableName)		\
+		public:												\
+		Library::Variable& VariableName() const;			\
+	private:												\
+		Library::Variable* m ## VariableName;
 
-	#define SHADER_VARIABLE_DEFINITION(ShaderProgram, VariableName)	\
-		Variable& ShaderProgram::VariableName() const				\
-		{															\
-			return *m ## VariableName;								\
+	#define SHADER_VARIABLE_DEFINITION(ShaderProgram, VariableName)		\
+		Library::Variable& ShaderProgram::VariableName() const			\
+		{																\
+			return *m ## VariableName;									\
 		}
 
 	#define SHADER_VARIABLE_INITIALIZATION(VariableName) m ## VariableName(nullptr)
