@@ -1,6 +1,7 @@
 #include "pch.h"
 
 using namespace glm;
+using namespace std;
 
 namespace Library
 {
@@ -78,7 +79,7 @@ namespace Library
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\BasicEffect.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\BasicEffect.frag"));
 		mShaderProgram.BuildProgram(shaders);
@@ -110,7 +111,7 @@ namespace Library
 	void Grid::InitializeGrid()
 	{
 		mVertexCount = (mSize + 1) * 4;
-		std::unique_ptr<VertexPositionColor> vertexData(new VertexPositionColor[mVertexCount]);
+		unique_ptr<VertexPositionColor[]> vertexData = make_unique<VertexPositionColor[]>(mVertexCount);
 		VertexPositionColor* vertices = vertexData.get();
 
 		float adjustedScale = mScale * 0.1f;

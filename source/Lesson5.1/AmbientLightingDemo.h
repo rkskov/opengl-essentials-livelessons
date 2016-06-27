@@ -9,45 +9,43 @@ namespace Library
 	class Light;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class AmbientLightingDemo : public DrawableGameComponent
+	class AmbientLightingDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(AmbientLightingDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(AmbientLightingDemo, Library::DrawableGameComponent)
 
 	public:		
-		AmbientLightingDemo(Game& game, Camera& camera);
+		AmbientLightingDemo(Library::Game& game, Library::Camera& camera);
+		AmbientLightingDemo(const AmbientLightingDemo&) = delete;
+		AmbientLightingDemo& operator=(const AmbientLightingDemo&) = delete;
+		AmbientLightingDemo(AmbientLightingDemo&&) = delete;
+		AmbientLightingDemo& operator=(AmbientLightingDemo&&) = delete;
 		~AmbientLightingDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		enum VertexAttribute
+		enum class VertexAttribute
 		{
-			VertexAttributePosition = 0,
-			VertexAttributeTextureCoordinate = 1
+			Position = 0,
+			TextureCoordinate = 1
 		};
 
-		AmbientLightingDemo();
-		AmbientLightingDemo(const AmbientLightingDemo& rhs);
-		AmbientLightingDemo& operator=(const AmbientLightingDemo& rhs);
+		void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer);
+		void UpdateAmbientLight(const Library::GameTime& gameTime);
 
-		void CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer);
-		void UpdateAmbientLight(const GameTime& gameTime);
-
-		ShaderProgram mShaderProgram;
+		glm::mat4 mWorldMatrix;
+		Library::Light* mAmbientLight;
+		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
 		GLint mWorldViewProjectionLocation;
-		GLint mAmbientColorLocation;
-		glm::mat4 mWorldMatrix;
+		GLint mAmbientColorLocation;		
 		GLuint mIndexCount;
-		GLuint mColorTexture;
-		Light* mAmbientLight;
+		GLuint mColorTexture;		
 	};
 }

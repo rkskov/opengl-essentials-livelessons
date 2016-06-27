@@ -33,10 +33,10 @@ namespace Library
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\Skybox.frag"));
 		mShaderProgram.BuildProgram(shaders);
 
-		std::unique_ptr<Model> model(new Model("Content\\Models\\Sphere.obj"));
+		Model model("Content\\Models\\Sphere.obj");
 
 		// Create the vertex and index buffers
-		Mesh* mesh = model->Meshes().at(0);
+		Mesh* mesh = model.Meshes().at(0);
 		mShaderProgram.CreateVertexBuffer(*mesh, mVertexBuffer);
 		mesh->CreateIndexBuffer(mIndexBuffer);
 		mIndexCount = mesh->Indices().size();

@@ -1,27 +1,17 @@
-#include "AmbientLightingDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "VertexDeclarations.h"
-#include "VectorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "Light.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(AmbientLightingDemo)
 
-	AmbientLightingDemo::AmbientLightingDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
+	AmbientLightingDemo::AmbientLightingDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
 		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mAmbientColorLocation(-1),
-		mWorldMatrix(), mIndexCount(), mColorTexture(0), mAmbientLight(nullptr)
+		mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr)
 	{
 	}
 
@@ -39,16 +29,16 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\AmbientLightingDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\AmbientLightingDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
 		
 		// Load the model
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
+		Model model("Content\\Models\\Sphere.obj", true);
 
 		// Create the vertex and index buffers
-		Mesh* mesh = model->Meshes().at(0);
+		Mesh* mesh = model.Meshes().at(0);
 		CreateVertexBuffer(*mesh, mVertexBuffer);
 		mesh->CreateIndexBuffer(mIndexBuffer);
 		mIndexCount = mesh->Indices().size();
@@ -75,12 +65,12 @@ namespace Rendering
 		// Create vertex array object
 		glGenVertexArrays(1, &mVertexArrayObject);
 		glBindVertexArray(mVertexArrayObject);
-		
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
 
-		glVertexAttribPointer(VertexAttributeTextureCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
-		glEnableVertexAttribArray(VertexAttributeTextureCoordinate);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
+
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::TextureCoordinate));
 
 		mAmbientLight = new Light(*mGame);
 	}
@@ -92,6 +82,8 @@ namespace Rendering
 
 	void AmbientLightingDemo::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
@@ -110,18 +102,18 @@ namespace Rendering
 
 	void AmbientLightingDemo::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer)
 	{
-		const std::vector<vec3>& sourceVertices = mesh.Vertices();
+		const vector<vec3>& sourceVertices = mesh.Vertices();
 
-		std::vector<VertexPositionTexture> vertices;
+		vector<VertexPositionTexture> vertices;
 		vertices.reserve(sourceVertices.size());
 
-		std::vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
+		vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
 		assert(textureCoordinates->size() == sourceVertices.size());
 
-		for (UINT i = 0; i < sourceVertices.size(); i++)
+		for (size_t i = 0; i < sourceVertices.size(); i++)
 		{
-			vec3 position = sourceVertices.at(i);
-			vec2 uv = (vec2)textureCoordinates->at(i);
+			const vec3& position = sourceVertices.at(i);
+			const vec2& uv = (vec2)textureCoordinates->at(i);
 			vertices.push_back(VertexPositionTexture(vec4(position.x, position.y, position.z, 1.0f), uv));
 		}
 
@@ -136,16 +128,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{
-			ambientIntensity += (float)gameTime.ElapsedGameTime();
-			ambientIntensity = min(ambientIntensity, 1.0f);
+			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::min(ambientIntensity, 1.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_DOWN) && ambientIntensity > 0.0f)
 		{
-			ambientIntensity -= (float)gameTime.ElapsedGameTime();
-			ambientIntensity = max(ambientIntensity, 0.0f);
+			ambientIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::max(ambientIntensity, 0.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
