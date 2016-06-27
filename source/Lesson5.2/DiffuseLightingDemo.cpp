@@ -1,30 +1,19 @@
-#include "DiffuseLightingDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "ShaderProgram.h"
-#include "VertexDeclarations.h"
-#include "VectorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "DirectionalLight.h"
-#include "ProxyModel.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(DiffuseLightingDemo)
 
-	const vec2 DiffuseLightingDemo::LightRotationRate = vec2(360.0f, 360.0f);
+	const vec2 DiffuseLightingDemo::LightRotationRate = vec2(radians(360.0f), radians(360.0f));
 
-	DiffuseLightingDemo::DiffuseLightingDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
+	DiffuseLightingDemo::DiffuseLightingDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
 		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mWorldLocation(-1), mAmbientColorLocation(-1),
-		mLightColorLocation(-1), mLightDirectionLocation(-1), mWorldMatrix(), mIndexCount(),
+		mLightColorLocation(-1), mLightDirectionLocation(-1), mIndexCount(0),
 		mColorTexture(0), mAmbientLight(nullptr), mDirectionalLight(nullptr), mProxyModel(nullptr)
 	{
 	}
@@ -45,16 +34,16 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\DiffuseLightingDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\DiffuseLightingDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
 		
 		// Load the model
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
+		Model model("Content\\Models\\Sphere.obj", true);
 
 		// Create the vertex and index buffers
-		Mesh* mesh = model->Meshes().at(0);
+		Mesh* mesh = model.Meshes().at(0);
 		CreateVertexBuffer(*mesh, mVertexBuffer);
 		mesh->CreateIndexBuffer(mIndexBuffer);
 		mIndexCount = mesh->Indices().size();
@@ -100,14 +89,14 @@ namespace Rendering
 		glGenVertexArrays(1, &mVertexArrayObject);
 		glBindVertexArray(mVertexArrayObject);
 
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
-		glVertexAttribPointer(VertexAttributeTextureCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, TextureCoordinates));
-		glEnableVertexAttribArray(VertexAttributeTextureCoordinate);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, TextureCoordinates));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::TextureCoordinate));
 
-		glVertexAttribPointer(VertexAttributeNormal, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Normal));
-		glEnableVertexAttribArray(VertexAttributeNormal);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Normal), 3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Normal));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Normal));
 
 		glBindVertexArray(0);
 
@@ -119,7 +108,7 @@ namespace Rendering
 		mProxyModel = new ProxyModel(*mGame, *mCamera, "Content\\Models\\DirectionalLightProxy.obj", 0.5f);
 		mProxyModel->Initialize();
 		mProxyModel->SetPosition(10.0f, 0.0, 0.0f);
-		mProxyModel->ApplyRotation(rotate(mat4(), 90.0f, Vector3Helper::Up));
+		mProxyModel->ApplyRotation(rotate(mat4(), radians(90.0f), Vector3Helper::Up));
 	}
 
 	void DiffuseLightingDemo::Update(const GameTime& gameTime)
@@ -158,22 +147,22 @@ namespace Rendering
 
 	void DiffuseLightingDemo::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer)
 	{
-		const std::vector<vec3>& sourceVertices = mesh.Vertices();
+		const vector<vec3>& sourceVertices = mesh.Vertices();
 
-		std::vector<VertexPositionTextureNormal> vertices;
+		vector<VertexPositionTextureNormal> vertices;
 		vertices.reserve(sourceVertices.size());
 
-		std::vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
+		vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
 		assert(textureCoordinates->size() == sourceVertices.size());
 
-		const std::vector<vec3>& normals = mesh.Normals();
+		const vector<vec3>& normals = mesh.Normals();
 		assert(normals.size() == sourceVertices.size());
 
 		for (UINT i = 0; i < sourceVertices.size(); i++)
 		{
-			vec3 position = sourceVertices.at(i);
-			vec2 uv = (vec2)textureCoordinates->at(i);
-			vec3 normal = normals.at(i);
+			const vec3& position = sourceVertices.at(i);
+			const vec2& uv = static_cast<vec2>(textureCoordinates->at(i));
+			const vec3& normal = normals.at(i);
 			vertices.push_back(VertexPositionTextureNormal(vec4(position.x, position.y, position.z, 1.0f), uv, normal));
 		}
 
@@ -188,16 +177,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{
-			ambientIntensity += (float)gameTime.ElapsedGameTime();
-			ambientIntensity = min(ambientIntensity, 1.0f);
+			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::min(ambientIntensity, 1.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_DOWN) && ambientIntensity > 0.0f)
 		{
-			ambientIntensity -= (float)gameTime.ElapsedGameTime();
-			ambientIntensity = max(ambientIntensity, 0.0f);
+			ambientIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::max(ambientIntensity, 0.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
@@ -206,20 +195,20 @@ namespace Rendering
 	void DiffuseLightingDemo::UpdateDirectionalLight(const GameTime& gameTime)
 	{
 		static float directionalIntensity = 1.0f;
-		float elapsedTime = (float)gameTime.ElapsedGameTime();
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
 
 		// Upddate directional light intensity		
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_HOME) && directionalIntensity < 1.0f)
 		{
 			directionalIntensity += elapsedTime;
-			directionalIntensity = min(directionalIntensity, 1.0f);
+			directionalIntensity = std::min(directionalIntensity, 1.0f);
 
 			mDirectionalLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_END) && directionalIntensity > 0.0f)
 		{
 			directionalIntensity -= elapsedTime;
-			directionalIntensity = max(directionalIntensity, 0.0f);
+			directionalIntensity = std::max(directionalIntensity, 0.0f);
 
 			mDirectionalLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}

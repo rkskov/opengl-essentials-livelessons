@@ -11,41 +11,40 @@ namespace Library
 	class ProxyModel;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class DiffuseLightingDemo : public DrawableGameComponent
+	class DiffuseLightingDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(DiffuseLightingDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(DiffuseLightingDemo, Library::DrawableGameComponent)
 
 	public:		
-		DiffuseLightingDemo(Game& game, Camera& camera);
+		DiffuseLightingDemo(Library::Game& game, Library::Camera& camera);
+		DiffuseLightingDemo(const DiffuseLightingDemo&) = delete;
+		DiffuseLightingDemo& operator=(const DiffuseLightingDemo&) = delete;
+		DiffuseLightingDemo(DiffuseLightingDemo&&) = delete;
+		DiffuseLightingDemo& operator=(DiffuseLightingDemo&&) = delete;
 		~DiffuseLightingDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		enum VertexAttribute
+		enum class VertexAttribute
 		{
-			VertexAttributePosition = 0,
-			VertexAttributeTextureCoordinate = 1,
-			VertexAttributeNormal = 2
-		};
+			Position = 0,
+			TextureCoordinate = 1,
+			Normal = 2
+		};	
 
-		DiffuseLightingDemo();
-		DiffuseLightingDemo(const DiffuseLightingDemo& rhs);
-		DiffuseLightingDemo& operator=(const DiffuseLightingDemo& rhs);
-
-		void CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer);
-		void UpdateAmbientLight(const GameTime& gameTime);
-		void UpdateDirectionalLight(const GameTime& gameTime);
+		void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer);
+		void UpdateAmbientLight(const Library::GameTime& gameTime);
+		void UpdateDirectionalLight(const Library::GameTime& gameTime);
 
 		static const glm::vec2 LightRotationRate;
 
-		ShaderProgram mShaderProgram;
+		glm::mat4 mWorldMatrix;
+		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
@@ -53,13 +52,11 @@ namespace Rendering
 		GLint mWorldLocation;
 		GLint mAmbientColorLocation;
 		GLint mLightColorLocation;
-		GLint mLightDirectionLocation;
-		glm::mat4 mWorldMatrix;
+		GLint mLightDirectionLocation;		
 		GLuint mIndexCount;
 		GLuint mColorTexture;
-		Light* mAmbientLight;
-		DirectionalLight* mDirectionalLight;
-
-		ProxyModel* mProxyModel;
+		Library::Light* mAmbientLight;
+		Library::DirectionalLight* mDirectionalLight;
+		Library::ProxyModel* mProxyModel;
 	};
 }
