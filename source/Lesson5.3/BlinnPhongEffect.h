@@ -20,11 +20,6 @@ namespace Rendering
 
     public:
         BlinnPhongEffect();
-		BlinnPhongEffect(const BlinnPhongEffect&) = delete;
-		BlinnPhongEffect& operator=(const BlinnPhongEffect&) = delete;
-		BlinnPhongEffect(BlinnPhongEffect&&) = delete;
-		BlinnPhongEffect& operator=(BlinnPhongEffect&&) = delete;
-		~BlinnPhongEffect() = default;
 
 		virtual void Initialize(GLuint vertexArrayObject) override;
 		virtual void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer) const override;

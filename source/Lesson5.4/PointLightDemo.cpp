@@ -1,17 +1,8 @@
-#include "PointLightDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "VectorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "PointLight.h"
-#include "ProxyModel.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
@@ -21,9 +12,9 @@ namespace Rendering
 	const float PointLightDemo::LightMovementRate = 10.0f;
 	const float PointLightDemo::RadiusModulationRate = UCHAR_MAX;
 
-	PointLightDemo::PointLightDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldMatrix(), mIndexCount(), mColorTexture(0), mAmbientLight(nullptr),
+	PointLightDemo::PointLightDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr),
 		mPointLight(nullptr), mSpecularColor(ColorHelper::White), mSpecularPower(25.0f),
 		mProxyModel(nullptr)
 	{
@@ -45,16 +36,16 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\PointLightDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\PointLightDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
 		
 		// Load the model
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
+		Model model("Content\\Models\\Sphere.obj", true);
 
 		// Create the vertex and index buffers
-		Mesh* mesh = model->Meshes().at(0);
+		Mesh* mesh = model.Meshes().at(0);
 		mShaderProgram.CreateVertexBuffer(*mesh, mVertexBuffer);
 		mesh->CreateIndexBuffer(mIndexBuffer);
 		mIndexCount = mesh->Indices().size();
@@ -127,16 +118,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{
-			ambientIntensity += (float)gameTime.ElapsedGameTime();
-			ambientIntensity = min(ambientIntensity, 1.0f);
+			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::min(ambientIntensity, 1.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_DOWN) && ambientIntensity > 0.0f)
 		{
-			ambientIntensity -= (float)gameTime.ElapsedGameTime();
-			ambientIntensity = max(ambientIntensity, 0.0f);
+			ambientIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::max(ambientIntensity, 0.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
@@ -145,20 +136,20 @@ namespace Rendering
 	void PointLightDemo::UpdatePointLight(const GameTime& gameTime)
 	{
 		static float directionalIntensity = 1.0f;
-		float elapsedTime = (float)gameTime.ElapsedGameTime();
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
 
 		// Upddate directional light intensity		
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_HOME) && directionalIntensity < 1.0f)
 		{
 			directionalIntensity += elapsedTime;
-			directionalIntensity = min(directionalIntensity, 1.0f);
+			directionalIntensity = std::min(directionalIntensity, 1.0f);
 
 			mPointLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_END) && directionalIntensity > 0.0f)
 		{
 			directionalIntensity -= elapsedTime;
-			directionalIntensity = max(directionalIntensity, 0.0f);
+			directionalIntensity = std::max(directionalIntensity, 0.0f);
 
 			mPointLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
@@ -209,7 +200,7 @@ namespace Rendering
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_B))
 		{
 			float radius = mPointLight->Radius() - LightModulationRate * elapsedTime;
-			radius = max(radius, 0.0f);
+			radius = std::max(radius, 0.0f);
 			mPointLight->SetRadius(radius);
 		}
 	}
@@ -220,16 +211,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_INSERT) && specularIntensity < 1.0f)
 		{
-			specularIntensity += (float)gameTime.ElapsedGameTime();
-			specularIntensity = min(specularIntensity, 1.0f);
+			specularIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = std::min(specularIntensity, 1.0f);
 
 			mSpecularColor = (vec4((vec3)specularIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_DELETE) && specularIntensity > 0.0f)
 		{
-			specularIntensity -= (float)gameTime.ElapsedGameTime();
-			specularIntensity = max(specularIntensity, 0.0f);
+			specularIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = std::max(specularIntensity, 0.0f);
 
 			mSpecularColor = (vec4((vec3)specularIntensity, 1.0f));
 		}
@@ -238,16 +229,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_O) && specularPower < UCHAR_MAX)
 		{
-			specularPower += LightModulationRate * (float)gameTime.ElapsedGameTime();
-			specularPower = min(specularPower, static_cast<float>(UCHAR_MAX));
+			specularPower += LightModulationRate * gameTime.ElapsedGameTimeSeconds().count();
+			specularPower = std::min(specularPower, static_cast<float>(UCHAR_MAX));
 
 			mSpecularPower = specularPower;
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_P) && specularPower > 0.0f)
 		{
-			specularPower -= LightModulationRate * (float)gameTime.ElapsedGameTime();
-			specularPower = max(specularPower, 0.0f);
+			specularPower -= LightModulationRate * gameTime.ElapsedGameTimeSeconds().count();
+			specularPower = std::max(specularPower, 0.0f);
 
 			mSpecularPower = specularPower;
 		}
