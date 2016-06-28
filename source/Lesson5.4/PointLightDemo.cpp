@@ -156,32 +156,32 @@ namespace Rendering
 
 		// Move point light
 		vec3 movementAmount = Vector3Helper::Zero;
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_J))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_4))
 		{
 			movementAmount.x = -1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_L))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_6))
 		{
 			movementAmount.x = 1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_I))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_9))
 		{
 			movementAmount.y = 1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_K))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_3))
 		{
 			movementAmount.y = -1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_N))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_8))
 		{
 			movementAmount.z = -1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_M))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_2))
 		{
 			movementAmount.z = 1.0f;
 		}

@@ -10,47 +10,44 @@ namespace Library
 	class ProxyModel;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class SpotLightDemo : public DrawableGameComponent
+	class SpotLightDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(SpotLightDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(SpotLightDemo, Library::DrawableGameComponent)
 
 	public:		
-		SpotLightDemo(Game& game, Camera& camera);
+		SpotLightDemo(Library::Game& game, Library::Camera& camera);
+		SpotLightDemo(const SpotLightDemo&) = delete;
+		SpotLightDemo& operator=(const SpotLightDemo&) = delete;
+		SpotLightDemo(SpotLightDemo&&) = delete;
+		SpotLightDemo& operator=(SpotLightDemo&&) = delete;
 		~SpotLightDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		SpotLightDemo();
-		SpotLightDemo(const SpotLightDemo& rhs);
-		SpotLightDemo& operator=(const SpotLightDemo& rhs);
-
-		void UpdateAmbientLight(const GameTime& gameTime);
-		void UpdateSpotLight(const GameTime& gameTime);
-		void UpdateSpecularLight(const GameTime& gameTime);
+		void UpdateAmbientLight(const Library::GameTime& gameTime);
+		void UpdateSpotLight(const Library::GameTime& gameTime);
+		void UpdateSpecularLight(const Library::GameTime& gameTime);
 
 		static const float LightModulationRate;
 		static const float LightMovementRate;
 		static const glm::vec2 LightRotationRate;
 
+		glm::mat4 mWorldMatrix;
+		glm::vec4 mSpecularColor;
 		SpotLightEffect mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
-		GLuint mIndexBuffer;
-		glm::mat4 mWorldMatrix;
-		GLuint mIndexCount;
+		GLuint mIndexBuffer;		
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
-		Light* mAmbientLight;
-		SpotLight* mSpotLight;
-		glm::vec4 mSpecularColor;
+		Library::Light* mAmbientLight;
+		Library::SpotLight* mSpotLight;		
 		float mSpecularPower;
-
-		ProxyModel* mProxyModel;
+		Library::ProxyModel* mProxyModel;
 	};
 }

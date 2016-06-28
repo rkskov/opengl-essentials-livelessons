@@ -1,28 +1,20 @@
-#include "SpotLightDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "VertexDeclarations.h"
-#include "VectorHelper.h"
-#include "SpotLight.h"
-#include "ProxyModel.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(SpotLightDemo)
 
-		const float SpotLightDemo::LightModulationRate = UCHAR_MAX;
+	const float SpotLightDemo::LightModulationRate = UCHAR_MAX;
 	const float SpotLightDemo::LightMovementRate = 10.0f;
-	const vec2 SpotLightDemo::LightRotationRate = vec2(360.0f, 360.0f);
+	const vec2 SpotLightDemo::LightRotationRate = vec2(two_pi<float>(), two_pi<float>());
 
-	SpotLightDemo::SpotLightDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldMatrix(), mIndexCount(), mColorTexture(0), mAmbientLight(nullptr),
+	SpotLightDemo::SpotLightDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mWorldMatrix(), mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr),
 		mSpotLight(nullptr), mSpecularColor(ColorHelper::White), mSpecularPower(25.0f),
 		mProxyModel(nullptr)
 	{
@@ -44,7 +36,7 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\SpotLightDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\SpotLightDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
@@ -60,7 +52,7 @@ namespace Rendering
 
 		mShaderProgram.CreateVertexBuffer(vertices, ARRAYSIZE(vertices), mVertexBuffer);
 
-		UINT indices[] =
+		uint32_t indices[] =
 		{
 			0, 2, 1,
 			0, 3, 2
@@ -70,7 +62,7 @@ namespace Rendering
 
 		glGenBuffers(1, &mIndexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(UINT)* mIndexCount, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * mIndexCount, indices, GL_STATIC_DRAW);
 
 		// Load the texture
 		mColorTexture = SOIL_load_OGL_texture("Content\\Textures\\Checkerboard.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
@@ -93,7 +85,7 @@ namespace Rendering
 
 		mProxyModel = new ProxyModel(*mGame, *mCamera, "Content\\Models\\SpotLightProxy.obj", 0.5f);
 		mProxyModel->Initialize();
-		mProxyModel->ApplyRotation(rotate(mat4(), 90.0f, Vector3Helper::Right));
+		mProxyModel->ApplyRotation(rotate(mat4(), half_pi<float>(), Vector3Helper::Right));
 
 		mWorldMatrix = scale(mat4(), vec3(5.0f));
 	}
@@ -146,16 +138,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{
-			ambientIntensity += (float)gameTime.ElapsedGameTime();
-			ambientIntensity = min(ambientIntensity, 1.0f);
+			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::min(ambientIntensity, 1.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_DOWN) && ambientIntensity > 0.0f)
 		{
-			ambientIntensity -= (float)gameTime.ElapsedGameTime();
-			ambientIntensity = max(ambientIntensity, 0.0f);
+			ambientIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::max(ambientIntensity, 0.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
@@ -164,52 +156,52 @@ namespace Rendering
 	void SpotLightDemo::UpdateSpotLight(const GameTime& gameTime)
 	{
 		static float directionalIntensity = 1.0f;
-		float elapsedTime = (float)gameTime.ElapsedGameTime();
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
 
 		// Upddate directional light intensity		
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_HOME) && directionalIntensity < 1.0f)
 		{
 			directionalIntensity += elapsedTime;
-			directionalIntensity = min(directionalIntensity, 1.0f);
+			directionalIntensity = std::min(directionalIntensity, 1.0f);
 
 			mSpotLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_END) && directionalIntensity > 0.0f)
 		{
 			directionalIntensity -= elapsedTime;
-			directionalIntensity = max(directionalIntensity, 0.0f);
+			directionalIntensity = std::max(directionalIntensity, 0.0f);
 
 			mSpotLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
 
 		// Move point light
 		vec3 movementAmount = Vector3Helper::Zero;
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_J))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_4))
 		{
 			movementAmount.x = -1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_L))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_6))
 		{
 			movementAmount.x = 1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_I))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_9))
 		{
 			movementAmount.y = 1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_K))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_3))
 		{
 			movementAmount.y = -1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_N))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_8))
 		{
 			movementAmount.z = -1.0f;
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_M))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_KP_2))
 		{
 			movementAmount.z = 1.0f;
 		}
@@ -219,16 +211,16 @@ namespace Rendering
 		mProxyModel->SetPosition(mSpotLight->Position());
 
 		// Update the light's radius
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_V))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_B))
 		{
 			float radius = mSpotLight->Radius() + LightModulationRate * elapsedTime;
 			mSpotLight->SetRadius(radius);
 		}
 
-		if (glfwGetKey(mGame->Window(), GLFW_KEY_B))
+		if (glfwGetKey(mGame->Window(), GLFW_KEY_N))
 		{
 			float radius = mSpotLight->Radius() - LightModulationRate * elapsedTime;
-			radius = max(radius, 0.0f);
+			radius = std::max(radius, 0.0f);
 			mSpotLight->SetRadius(radius);
 		}
 
@@ -273,14 +265,14 @@ namespace Rendering
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_Z) && innerAngle < 1.0f)
 		{
 			innerAngle += elapsedTime;
-			innerAngle = min(innerAngle, 1.0f);
+			innerAngle = std::min(innerAngle, 1.0f);
 
 			mSpotLight->SetInnerAngle(innerAngle);
 		}
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_X) && innerAngle > 0.5f)
 		{
 			innerAngle -= elapsedTime;
-			innerAngle = max(innerAngle, 0.5f);
+			innerAngle = std::max(innerAngle, 0.5f);
 
 			mSpotLight->SetInnerAngle(innerAngle);
 		}
@@ -289,14 +281,14 @@ namespace Rendering
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_C) && outerAngle < 0.5f)
 		{
 			outerAngle += elapsedTime;
-			outerAngle = min(outerAngle, 0.5f);
+			outerAngle = std::min(outerAngle, 0.5f);
 
 			mSpotLight->SetOuterAngle(outerAngle);
 		}
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_V) && outerAngle > 0.0f)
 		{
 			outerAngle -= elapsedTime;
-			outerAngle = max(outerAngle, 0.0f);
+			outerAngle = std::max(outerAngle, 0.0f);
 
 			mSpotLight->SetOuterAngle(outerAngle);
 		}
@@ -308,16 +300,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_INSERT) && specularIntensity < 1.0f)
 		{
-			specularIntensity += (float)gameTime.ElapsedGameTime();
-			specularIntensity = min(specularIntensity, 1.0f);
+			specularIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = std::min(specularIntensity, 1.0f);
 
 			mSpecularColor = (vec4((vec3)specularIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_DELETE) && specularIntensity > 0.0f)
 		{
-			specularIntensity -= (float)gameTime.ElapsedGameTime();
-			specularIntensity = max(specularIntensity, 0.0f);
+			specularIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = std::max(specularIntensity, 0.0f);
 
 			mSpecularColor = (vec4((vec3)specularIntensity, 1.0f));
 		}
@@ -326,16 +318,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_O) && specularPower < UCHAR_MAX)
 		{
-			specularPower += LightModulationRate * (float)gameTime.ElapsedGameTime();
-			specularPower = min(specularPower, static_cast<float>(UCHAR_MAX));
+			specularPower += LightModulationRate * gameTime.ElapsedGameTimeSeconds().count();
+			specularPower = std::min(specularPower, static_cast<float>(UCHAR_MAX));
 
 			mSpecularPower = specularPower;
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_P) && specularPower > 0.0f)
 		{
-			specularPower -= LightModulationRate * (float)gameTime.ElapsedGameTime();
-			specularPower = max(specularPower, 0.0f);
+			specularPower -= LightModulationRate * gameTime.ElapsedGameTimeSeconds().count();
+			specularPower = std::max(specularPower, 0.0f);
 
 			mSpecularPower = specularPower;
 		}

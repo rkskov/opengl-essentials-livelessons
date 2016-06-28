@@ -1,16 +1,15 @@
-#include "SpotLightEffect.h"
-#include "GameException.h"
-#include "Mesh.h"
-#include "ColorHelper.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
-namespace Library
+namespace Rendering
 {
     RTTI_DEFINITIONS(SpotLightEffect)	
 
-    SpotLightEffect::SpotLightEffect()
-        : ShaderProgram(),
+    SpotLightEffect::SpotLightEffect() :
+		ShaderProgram(),
 		SHADER_VARIABLE_INITIALIZATION(WorldViewProjection), SHADER_VARIABLE_INITIALIZATION(World),
 		SHADER_VARIABLE_INITIALIZATION(AmbientColor), SHADER_VARIABLE_INITIALIZATION(LightColor),
 		SHADER_VARIABLE_INITIALIZATION(LightPosition), SHADER_VARIABLE_INITIALIZATION(LightRadius),
@@ -50,14 +49,14 @@ namespace Library
 		SHADER_VARIABLE_INSTANTIATE(SpotLightInnerAngle)
 		SHADER_VARIABLE_INSTANTIATE(SpotLightOuterAngle)
 
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
-		glVertexAttribPointer(VertexAttributeTextureCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, TextureCoordinates));
-		glEnableVertexAttribArray(VertexAttributeTextureCoordinate);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, TextureCoordinates));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::TextureCoordinate));
 
-		glVertexAttribPointer(VertexAttributeNormal, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Normal));
-		glEnableVertexAttribArray(VertexAttributeNormal);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Normal), 3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Normal));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Normal));
     }
 
 	void SpotLightEffect::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const
@@ -73,25 +72,25 @@ namespace Library
 		const std::vector<vec3>& normals = mesh.Normals();
 		assert(normals.size() == sourceVertices.size());
 
-		for (UINT i = 0; i < sourceVertices.size(); i++)
+		for (size_t i = 0; i < sourceVertices.size(); i++)
 		{
-			vec3 position = sourceVertices.at(i);
-			vec2 uv = (vec2)textureCoordinates->at(i);
-			vec3 normal = normals.at(i);
+			const vec3& position = sourceVertices.at(i);
+			const vec2& uv = static_cast<vec2>(textureCoordinates->at(i));
+			const vec3& normal = normals.at(i);
 			vertices.push_back(VertexPositionTextureNormal(vec4(position.x, position.y, position.z, 1.0f), uv, normal));
 		}
 
 		CreateVertexBuffer(&vertices[0], vertices.size(), vertexBuffer);
 	}
 
-	void SpotLightEffect::CreateVertexBuffer(VertexPositionTextureNormal* vertices, GLuint vertexCount, GLuint& vertexBuffer) const
+	void SpotLightEffect::CreateVertexBuffer(VertexPositionTextureNormal* vertices, uint32_t vertexCount, GLuint& vertexBuffer) const
 	{
 		glGenBuffers(1, &vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, VertexSize() * vertexCount, &vertices[0], GL_STATIC_DRAW);
 	}
 
-    UINT SpotLightEffect::VertexSize() const
+    uint32_t SpotLightEffect::VertexSize() const
     {
         return sizeof(VertexPositionTextureNormal);
     }

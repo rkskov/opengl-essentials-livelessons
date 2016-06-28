@@ -35,7 +35,7 @@ namespace Library
         const std::vector<std::vector<glm::vec3>*>& TextureCoordinates() const;
         const std::vector<std::vector<glm::vec4>*>& VertexColors() const;
         std::uint32_t FaceCount() const;
-        const std::vector<UINT>& Indices() const;
+        const std::vector<std::uint32_t>& Indices() const;
 
         void CreateIndexBuffer(GLuint& indexBuffer);
 

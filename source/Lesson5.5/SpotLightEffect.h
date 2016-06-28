@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Common.h"
 #include "ShaderProgram.h"
 #include "VertexDeclarations.h"
 
-namespace Library
+namespace Rendering
 {
-	class SpotLightEffect : public ShaderProgram
+	class SpotLightEffect : public Library::ShaderProgram
     {
-		RTTI_DECLARATIONS(SpotLightEffect, ShaderProgram)
+		RTTI_DECLARATIONS(SpotLightEffect, Library::ShaderProgram)
 
         SHADER_VARIABLE_DECLARATION(WorldViewProjection)
 		SHADER_VARIABLE_DECLARATION(World)
@@ -25,20 +24,18 @@ namespace Library
 
     public:
         SpotLightEffect();
-		SpotLightEffect(const SpotLightEffect& rhs);
-		SpotLightEffect& operator=(const SpotLightEffect& rhs);
 
 		virtual void Initialize(GLuint vertexArrayObject) override;
-		virtual void CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const override;
-		void CreateVertexBuffer(VertexPositionTextureNormal* vertices, UINT vertexCount, GLuint& vertexBuffer) const;
-		virtual UINT VertexSize() const override;
+		virtual void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer) const override;
+		void CreateVertexBuffer(Library::VertexPositionTextureNormal* vertices, std::uint32_t vertexCount, GLuint& vertexBuffer) const;
+		virtual std::uint32_t VertexSize() const override;
 
 	private:
-		enum VertexAttribute
+		enum class VertexAttribute
 		{
-			VertexAttributePosition = 0,
-			VertexAttributeTextureCoordinate = 1,
-			VertexAttributeNormal = 2
+			Position = 0,
+			TextureCoordinate = 1,
+			Normal = 2
 		};
     };
 }
