@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Common.h"
 #include "ShaderProgram.h"
 #include "VertexDeclarations.h"
 
-namespace Library
+namespace Rendering
 {
-	class EnvironmentMappingEffect : public ShaderProgram
+	class EnvironmentMappingEffect : public Library::ShaderProgram
     {
 		RTTI_DECLARATIONS(EnvironmentMappingEffect, ShaderProgram)
 
@@ -19,20 +18,18 @@ namespace Library
 
     public:
         EnvironmentMappingEffect();
-		EnvironmentMappingEffect(const EnvironmentMappingEffect& rhs);
-		EnvironmentMappingEffect& operator=(const EnvironmentMappingEffect& rhs);
 
 		virtual void Initialize(GLuint vertexArrayObject) override;
-		virtual void CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const override;
-		void CreateVertexBuffer(VertexPositionTextureNormal* vertices, UINT vertexCount, GLuint& vertexBuffer) const;
+		virtual void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer) const override;
+		void CreateVertexBuffer(Library::VertexPositionTextureNormal* vertices, std::uint32_t vertexCount, GLuint& vertexBuffer) const;
 		virtual UINT VertexSize() const override;
 
 	private:
-		enum VertexAttribute
+		enum class VertexAttribute
 		{
-			VertexAttributePosition = 0,
-			VertexAttributeTextureCoordinate = 1,
-			VertexAttributeNormal = 2
+			Position = 0,
+			TextureCoordinate = 1,
+			Normal = 2
 		};
     };
 }

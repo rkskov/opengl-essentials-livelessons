@@ -1,25 +1,16 @@
-#include "EnvironmentMappingDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "VectorHelper.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "Light.h"
-#include "SOIL.h"
-#include <sstream>
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(EnvironmentMappingDemo)
 
-	EnvironmentMappingDemo::EnvironmentMappingDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldMatrix(), mIndexCount(), mColorTexture(0), mEnvironmentMap(0),
+	EnvironmentMappingDemo::EnvironmentMappingDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mIndexCount(0), mColorTexture(0), mEnvironmentMap(0),
 		mAmbientLight(nullptr), mEnvironmentColor(ColorHelper::White), mReflectionAmount(1.0f),
 		mColorTextureSampler(0), mEnvironmentMapSampler(0)
 	{
@@ -42,16 +33,16 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\EnvironmentMappingDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\EnvironmentMappingDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
 		
 		// Load the model
-		std::unique_ptr<Model> model(new Model(*mGame, "Content\\Models\\Sphere.obj", true));
+		Model model("Content\\Models\\Sphere.obj", true);
 
 		// Create the vertex and index buffers
-		Mesh* mesh = model->Meshes().at(0);
+		Mesh* mesh = model.Meshes().at(0);
 		mShaderProgram.CreateVertexBuffer(*mesh, mVertexBuffer);
 		mesh->CreateIndexBuffer(mIndexBuffer);
 		mIndexCount = mesh->Indices().size();
@@ -70,7 +61,7 @@ namespace Rendering
 		glSamplerParameteri(mColorTextureSampler, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		// Load the environment map
-		std::wostringstream environmentMapFilename;
+		wostringstream environmentMapFilename;
 		environmentMapFilename << Utility::ExecutableDirectory() << "\\Content\\Textures\\Maskonaive2_1024";
 		SetCurrentDirectory(environmentMapFilename.str().c_str());
 		
@@ -104,6 +95,8 @@ namespace Rendering
 
 	void EnvironmentMappingDemo::Draw(const GameTime& gameTime)
 	{
+		UNREFERENCED_PARAMETER(gameTime);
+
 		glBindVertexArray(mVertexArrayObject);
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
@@ -135,20 +128,20 @@ namespace Rendering
 
 	void EnvironmentMappingDemo::UpdateAmbientLight(const GameTime& gameTime)
 	{
-		static float ambientIntensity = 1.0f;
+		static float ambientIntensity = 0.0f;
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{
-			ambientIntensity += (float)gameTime.ElapsedGameTime();
-			ambientIntensity = min(ambientIntensity, 1.0f);
+			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::min(ambientIntensity, 1.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_DOWN) && ambientIntensity > 0.0f)
 		{
-			ambientIntensity -= (float)gameTime.ElapsedGameTime();
-			ambientIntensity = max(ambientIntensity, 0.0f);
+			ambientIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::max(ambientIntensity, 0.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
@@ -160,16 +153,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_UP) && reflectionAmount < 1.0f)
 		{
-			reflectionAmount += (float)gameTime.ElapsedGameTime();
-			reflectionAmount = min(reflectionAmount, 1.0f);
+			reflectionAmount += gameTime.ElapsedGameTimeSeconds().count();
+			reflectionAmount = std::min(reflectionAmount, 1.0f);
 
 			mReflectionAmount = reflectionAmount;
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_DOWN) && reflectionAmount > 0.0f)
 		{
-			reflectionAmount -= (float)gameTime.ElapsedGameTime();
-			reflectionAmount = max(reflectionAmount, 0.0f);
+			reflectionAmount -= gameTime.ElapsedGameTimeSeconds().count();
+			reflectionAmount = std::max(reflectionAmount, 0.0f);
 
 			mReflectionAmount = reflectionAmount;
 		}

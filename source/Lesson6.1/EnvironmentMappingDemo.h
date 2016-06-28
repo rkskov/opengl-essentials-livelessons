@@ -8,40 +8,38 @@ namespace Library
 	class Light;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class EnvironmentMappingDemo : public DrawableGameComponent
+	class EnvironmentMappingDemo : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(EnvironmentMappingDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(EnvironmentMappingDemo, Library::DrawableGameComponent)
 
 	public:		
-		EnvironmentMappingDemo(Game& game, Camera& camera);
+		EnvironmentMappingDemo(Library::Game& game, Library::Camera& camera);
+		EnvironmentMappingDemo(const EnvironmentMappingDemo&) = delete;
+		EnvironmentMappingDemo& operator=(const EnvironmentMappingDemo&) = delete;
+		EnvironmentMappingDemo(EnvironmentMappingDemo&&) = delete;
+		EnvironmentMappingDemo& operator=(EnvironmentMappingDemo&&) = delete;
 		~EnvironmentMappingDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		EnvironmentMappingDemo();
-		EnvironmentMappingDemo(const EnvironmentMappingDemo& rhs);
-		EnvironmentMappingDemo& operator=(const EnvironmentMappingDemo& rhs);
-
-		void UpdateAmbientLight(const GameTime& gameTime);
-		void UpdateReflectionAmount(const GameTime& gameTime);
+		void UpdateAmbientLight(const Library::GameTime& gameTime);
+		void UpdateReflectionAmount(const Library::GameTime& gameTime);
 		
+		glm::mat4 mWorldMatrix;
+		glm::vec4 mEnvironmentColor;
 		EnvironmentMappingEffect mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
-		glm::mat4 mWorldMatrix;
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
 		GLuint mEnvironmentMap;
-		Light* mAmbientLight;
-		glm::vec4 mEnvironmentColor;
+		Library::Light* mAmbientLight;
 		float mReflectionAmount;
 		GLuint mColorTextureSampler;
 		GLuint mEnvironmentMapSampler;

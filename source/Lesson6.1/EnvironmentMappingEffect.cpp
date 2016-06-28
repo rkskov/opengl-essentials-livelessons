@@ -1,16 +1,14 @@
-#include "EnvironmentMappingEffect.h"
-#include "GameException.h"
-#include "Mesh.h"
-#include "ColorHelper.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
-namespace Library
+namespace Rendering
 {
     RTTI_DEFINITIONS(EnvironmentMappingEffect)	
 
-    EnvironmentMappingEffect::EnvironmentMappingEffect()
-        : ShaderProgram(),
+    EnvironmentMappingEffect::EnvironmentMappingEffect() :
 		SHADER_VARIABLE_INITIALIZATION(WorldViewProjection), SHADER_VARIABLE_INITIALIZATION(World),
 		SHADER_VARIABLE_INITIALIZATION(AmbientColor), SHADER_VARIABLE_INITIALIZATION(EnvironmentColor),
 		SHADER_VARIABLE_INITIALIZATION(ReflectionAmount), SHADER_VARIABLE_INITIALIZATION(CameraPosition)
@@ -35,34 +33,34 @@ namespace Library
 		SHADER_VARIABLE_INSTANTIATE(ReflectionAmount)
 		SHADER_VARIABLE_INSTANTIATE(CameraPosition)
 
-		glVertexAttribPointer(VertexAttributePosition, 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Position));
-		glEnableVertexAttribArray(VertexAttributePosition);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Position));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
-		glVertexAttribPointer(VertexAttributeTextureCoordinate, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, TextureCoordinates));
-		glEnableVertexAttribArray(VertexAttributeTextureCoordinate);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, TextureCoordinates));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::TextureCoordinate));
 
-		glVertexAttribPointer(VertexAttributeNormal, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Normal));
-		glEnableVertexAttribArray(VertexAttributeNormal);
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Normal), 3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Normal));
+		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Normal));
     }
 
 	void EnvironmentMappingEffect::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const
 	{
-		const std::vector<vec3>& sourceVertices = mesh.Vertices();
+		const vector<vec3>& sourceVertices = mesh.Vertices();
 
-		std::vector<VertexPositionTextureNormal> vertices;
+		vector<VertexPositionTextureNormal> vertices;
 		vertices.reserve(sourceVertices.size());
 
-		std::vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
+		vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
 		assert(textureCoordinates->size() == sourceVertices.size());
 
-		const std::vector<vec3>& normals = mesh.Normals();
+		const vector<vec3>& normals = mesh.Normals();
 		assert(normals.size() == sourceVertices.size());
 
-		for (UINT i = 0; i < sourceVertices.size(); i++)
+		for (size_t i = 0; i < sourceVertices.size(); i++)
 		{
-			vec3 position = sourceVertices.at(i);
-			vec2 uv = (vec2)textureCoordinates->at(i);
-			vec3 normal = normals.at(i);
+			const vec3& position = sourceVertices.at(i);
+			const vec2& uv = static_cast<vec2>(textureCoordinates->at(i));
+			const vec3& normal = normals.at(i);
 			vertices.push_back(VertexPositionTextureNormal(vec4(position.x, position.y, position.z, 1.0f), uv, normal));
 		}
 
