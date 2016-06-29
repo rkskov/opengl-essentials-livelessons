@@ -12,57 +12,54 @@ namespace Library
 	class ProxyModel;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class NormalMappingDemo : public DrawableGameComponent
+	class NormalMappingDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(NormalMappingDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(NormalMappingDemo, Library::DrawableGameComponent)
 
 	public:		
-		NormalMappingDemo(Game& game, Camera& camera);
+		NormalMappingDemo(Library::Game& game, Library::Camera& camera);
+		NormalMappingDemo(const NormalMappingDemo&) = delete;
+		NormalMappingDemo& operator=(const NormalMappingDemo&) = delete;
+		NormalMappingDemo(NormalMappingDemo&&) = delete;
+		NormalMappingDemo& operator=(NormalMappingDemo&&) = delete;
 		~NormalMappingDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		NormalMappingDemo();
-		NormalMappingDemo(const NormalMappingDemo& rhs);
-		NormalMappingDemo& operator=(const NormalMappingDemo& rhs);
-
-		void UpdateAmbientLight(const GameTime& gameTime);
-		void UpdateDirectionalLight(const GameTime& gameTime);
-		void UpdateSpecularLight(const GameTime& gameTime);
+		void UpdateAmbientLight(const Library::GameTime& gameTime);
+		void UpdateDirectionalLight(const Library::GameTime& gameTime);
+		void UpdateSpecularLight(const Library::GameTime& gameTime);
 		void OnKey(int key, int scancode, int action, int mods);
 
 		static const glm::vec2 LightRotationRate;
 		static const float LightModulationRate;
 
+		glm::mat4 mWorldMatrix;
+		glm::vec4 mSpecularColor;
+		glm::vec4 mFogColor;
 		NormalMappingEffect mNormalMappingEffect;
 		FogEffect mFogEffect;
 		GLuint mNormalMappingVAO;
 		GLuint mFogVAO;
 		GLuint mNormalMappingVertexBuffer;
 		GLuint mFogVertexBuffer;
-		GLuint mIndexBuffer;
-		glm::mat4 mWorldMatrix;
-		GLuint mIndexCount;
+		GLuint mIndexBuffer;		
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
-		Light* mAmbientLight;
-		DirectionalLight* mDirectionalLight;
-		glm::vec4 mSpecularColor;
-		float mSpecularPower;
-		glm::vec4 mFogColor;
+		Library::Light* mAmbientLight;
+		Library::DirectionalLight* mDirectionalLight;		
+		float mSpecularPower;		
 		float mFogStart;
 		float mFogRange;
 		GLuint mNormalMap;
 		GLuint mTrilinearSampler;
-
-		ProxyModel* mProxyModel;
+		Library::ProxyModel* mProxyModel;		
+		Library::Game::KeyboardHandler mKeyboardHandler;
 		bool mShowNormalMapping;
-		Game::KeyboardHandler mKeyboardHandler;
 	};
 }

@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Common.h"
 #include "ShaderProgram.h"
 #include "VertexDeclarations.h"
 
-namespace Library
+namespace Rendering
 {
-	class NormalMappingEffect : public ShaderProgram
+	class NormalMappingEffect final : public Library::ShaderProgram
     {
-		RTTI_DECLARATIONS(NormalMappingEffect, ShaderProgram)
+		RTTI_DECLARATIONS(NormalMappingEffect, Library::ShaderProgram)
 
         SHADER_VARIABLE_DECLARATION(WorldViewProjection)
 		SHADER_VARIABLE_DECLARATION(World)
@@ -24,22 +23,20 @@ namespace Library
 
     public:
         NormalMappingEffect();
-		NormalMappingEffect(const NormalMappingEffect& rhs);
-		NormalMappingEffect& operator=(const NormalMappingEffect& rhs);
 
 		virtual void Initialize(GLuint vertexArrayObject) override;
-		virtual void CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const override;
-		void CreateVertexBuffer(VertexPositionTextureNormalTangentBinormal* vertices, UINT vertexCount, GLuint& vertexBuffer) const;
-		virtual UINT VertexSize() const override;
+		virtual void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer) const override;
+		void CreateVertexBuffer(Library::VertexPositionTextureNormalTangentBinormal* vertices, std::uint32_t vertexCount, GLuint& vertexBuffer) const;
+		virtual std::uint32_t VertexSize() const override;
 
 	private:
 		enum VertexAttribute
 		{
-			VertexAttributePosition = 0,
-			VertexAttributeTextureCoordinate = 1,
-			VertexAttributeNormal = 2,
-			VertexAttributeTangent = 3,
-			VertexAttributeBinormal = 4
+			Position = 0,
+			TextureCoordinate = 1,
+			Normal = 2,
+			Tangent = 3,
+			Binormal = 4
 		};
     };
 }

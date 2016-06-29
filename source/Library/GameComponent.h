@@ -14,10 +14,10 @@ namespace Library
 	public:
 		GameComponent();
 		GameComponent(Game& game);
-		GameComponent(const GameComponent& rhs) = delete;
-		GameComponent& operator=(const GameComponent& rhs) = delete;
-		GameComponent(GameComponent&& rhs) = delete;
-		GameComponent& operator=(GameComponent&& rhs) = delete;
+		GameComponent(const GameComponent&) = delete;
+		GameComponent& operator=(const GameComponent&) = delete;
+		GameComponent(GameComponent&&) = delete;
+		GameComponent& operator=(GameComponent&&) = delete;
 		virtual ~GameComponent() = default;
 
 		Game* GetGame();

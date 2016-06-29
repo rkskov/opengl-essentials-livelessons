@@ -8,10 +8,10 @@ namespace Library
 	{
 	public:
 		ServiceContainer() = default;
-		ServiceContainer(const ServiceContainer& rhs) = delete;
-		ServiceContainer& operator=(const ServiceContainer& rhs) = delete;
-		ServiceContainer(ServiceContainer&& rhs) = delete;
-		ServiceContainer& operator=(ServiceContainer&& rhs) = delete;
+		ServiceContainer(const ServiceContainer&) = delete;
+		ServiceContainer& operator=(const ServiceContainer&) = delete;
+		ServiceContainer(ServiceContainer&&) = delete;
+		ServiceContainer& operator=(ServiceContainer&&) = delete;
 		~ServiceContainer() = default;
 
 		void AddService(std::uint64_t typeID, void* service);

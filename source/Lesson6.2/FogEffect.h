@@ -5,7 +5,7 @@
 
 namespace Rendering
 {
-	class FogEffect : public Library::ShaderProgram
+	class FogEffect final : public Library::ShaderProgram
 	{
 		RTTI_DECLARATIONS(FogEffect, Library::ShaderProgram)
 

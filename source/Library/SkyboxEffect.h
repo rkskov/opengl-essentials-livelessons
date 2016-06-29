@@ -15,10 +15,10 @@ namespace Library
 
     public:
         SkyboxEffect();
-		SkyboxEffect(const SkyboxEffect& rhs) = delete;
-		SkyboxEffect& operator=(const SkyboxEffect& rhs) = delete;
-		SkyboxEffect(SkyboxEffect&& rhs) = delete;
-		SkyboxEffect& operator=(SkyboxEffect&& rhs) = delete;
+		SkyboxEffect(const SkyboxEffect&) = delete;
+		SkyboxEffect& operator=(const SkyboxEffect&) = delete;
+		SkyboxEffect(SkyboxEffect&&) = delete;
+		SkyboxEffect& operator=(SkyboxEffect&&) = delete;
 		~SkyboxEffect() = default;
 
 		virtual void Initialize(GLuint vertexArrayObject) override;

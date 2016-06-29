@@ -15,10 +15,10 @@ namespace Library
 
     public:
         BasicEffect();
-		BasicEffect(const BasicEffect& rhs) = delete;
-		BasicEffect& operator=(const BasicEffect& rhs) = delete;
-		BasicEffect(BasicEffect&& rhs) = delete;
-		BasicEffect& operator=(BasicEffect&& rhs) = delete;
+		BasicEffect(const BasicEffect&) = delete;
+		BasicEffect& operator=(const BasicEffect&) = delete;
+		BasicEffect(BasicEffect&&) = delete;
+		BasicEffect& operator=(BasicEffect&&) = delete;
 		~BasicEffect() = default;
 
 		virtual void Initialize(GLuint vertexArrayObject) override;

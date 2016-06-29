@@ -21,10 +21,10 @@ namespace Library
 
 	public:
 		ShaderProgram();
-		ShaderProgram(const ShaderProgram& rhs) = delete;
-		ShaderProgram& operator=(const ShaderProgram& rhs) = delete;
-		ShaderProgram(ShaderProgram&& rhs) = delete;
-		ShaderProgram& operator=(ShaderProgram&& rhs) = delete;
+		ShaderProgram(const ShaderProgram&) = delete;
+		ShaderProgram& operator=(const ShaderProgram&) = delete;
+		ShaderProgram(ShaderProgram&&) = delete;
+		ShaderProgram& operator=(ShaderProgram&&) = delete;
 		virtual ~ShaderProgram();
 		
 		static GLuint CompileShaderFromFile(GLenum shaderType, const std::wstring& filename);

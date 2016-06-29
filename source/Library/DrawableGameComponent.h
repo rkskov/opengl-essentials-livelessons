@@ -14,10 +14,10 @@ namespace Library
 		DrawableGameComponent();
 		DrawableGameComponent(Game& game);
 		DrawableGameComponent(Game& game, Camera& camera);
-		DrawableGameComponent(const DrawableGameComponent& rhs) = delete;
-		DrawableGameComponent& operator=(const DrawableGameComponent& rhs) = delete;
-		DrawableGameComponent(DrawableGameComponent&& rhs) = delete;
-		DrawableGameComponent& operator=(DrawableGameComponent&& rhs) = delete;
+		DrawableGameComponent(const DrawableGameComponent&) = delete;
+		DrawableGameComponent& operator=(const DrawableGameComponent&) = delete;
+		DrawableGameComponent(DrawableGameComponent&&) = delete;
+		DrawableGameComponent& operator=(DrawableGameComponent&&) = delete;
 		virtual ~DrawableGameComponent() = default;
 
 		bool Visible() const;

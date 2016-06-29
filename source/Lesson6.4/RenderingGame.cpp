@@ -1,19 +1,14 @@
-#include "RenderingGame.h"
-#include "GameException.h"
-#include "FirstPersonCamera.h"
-#include "ColorHelper.h"
-#include "VectorHelper.h"
-#include "Grid.h"
-#include "Utility.h"
-#include "Skybox.h"
-#include "NormalMappingDemo.h"
+#include "pch.h"
+
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(RenderingGame)
 
-	RenderingGame::RenderingGame(HINSTANCE instance, const std::wstring& windowTitle)
-		: Game(instance, windowTitle),
+	RenderingGame::RenderingGame(HINSTANCE instance, const wstring& windowTitle) :
+		Game(instance, windowTitle),
 		mCamera(nullptr), mKeyboardHandler(nullptr), mGrid(nullptr), mSkybox(nullptr),
 		mNormalMappingDemo(nullptr)
 	{
@@ -29,7 +24,7 @@ namespace Rendering
 		mServices.AddService(Camera::TypeIdClass(), mCamera);
 
 		using namespace std::placeholders;
-		mKeyboardHandler = std::bind(&RenderingGame::OnKey, this, _1, _2, _3, _4);
+		mKeyboardHandler = bind(&RenderingGame::OnKey, this, _1, _2, _3, _4);
 		AddKeyboardHandler(mKeyboardHandler);
 
 		mGrid = new Grid(*this, *mCamera);
@@ -72,6 +67,9 @@ namespace Rendering
 
 	void RenderingGame::OnKey(int key, int scancode, int action, int mods)
 	{
+		UNREFERENCED_PARAMETER(scancode);
+		UNREFERENCED_PARAMETER(mods);
+
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		{
 			Exit();

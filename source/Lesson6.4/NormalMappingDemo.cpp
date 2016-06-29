@@ -1,26 +1,19 @@
-#include "NormalMappingDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "VectorHelper.h"
-#include "DirectionalLight.h"
-#include "ProxyModel.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(NormalMappingDemo)
 
-	const vec2 NormalMappingDemo::LightRotationRate = vec2(360.0f, 360.0f);
+	const vec2 NormalMappingDemo::LightRotationRate = vec2(two_pi<float>(), two_pi<float>());
 	const float NormalMappingDemo::LightModulationRate = UCHAR_MAX;
 
-	NormalMappingDemo::NormalMappingDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mNormalMappingEffect(), mFogEffect(), mNormalMappingVAO(0), mFogVAO(0),
-		mNormalMappingVertexBuffer(0), mFogVertexBuffer(0), mIndexBuffer(0), mWorldMatrix(), mIndexCount(), mColorTexture(0), mAmbientLight(nullptr),
+	NormalMappingDemo::NormalMappingDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mNormalMappingVAO(0), mFogVAO(0),
+		mNormalMappingVertexBuffer(0), mFogVertexBuffer(0), mIndexBuffer(0), mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr),
 		mDirectionalLight(nullptr), mSpecularColor(ColorHelper::Black), mSpecularPower(25.0f),
 		mFogColor(ColorHelper::CornflowerBlue), mFogStart(20.0f), mFogRange(40.0f),
 		mNormalMap(0), mTrilinearSampler(0), mProxyModel(nullptr), mShowNormalMapping(true), mKeyboardHandler(nullptr)
@@ -48,7 +41,7 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader programs
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\NormalMappingDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\NormalMappingDemo.frag"));
 		mNormalMappingEffect.BuildProgram(shaders);
@@ -113,7 +106,7 @@ namespace Rendering
 		glBindVertexArray(0);
 		
 		// Create the index buffer
-		UINT indices[] =
+		uint32_t indices[] =
 		{
 			0, 2, 1,
 			0, 3, 2
@@ -123,7 +116,7 @@ namespace Rendering
 
 		glGenBuffers(1, &mIndexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(UINT)* mIndexCount, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * mIndexCount, indices, GL_STATIC_DRAW);
 
 		mAmbientLight = new Light(*mGame);
 		mAmbientLight->SetColor(ColorHelper::Black);
@@ -133,13 +126,13 @@ namespace Rendering
 		mProxyModel = new ProxyModel(*mGame, *mCamera, "Content\\Models\\DirectionalLightProxy.obj", 0.5f);
 		mProxyModel->Initialize();
 		mProxyModel->SetPosition(10.0f, 0.0, 0.0f);
-		mProxyModel->ApplyRotation(rotate(mat4(), 90.0f, Vector3Helper::Up));
+		mProxyModel->ApplyRotation(rotate(mat4(), half_pi<float>(), Vector3Helper::Up));
 
 		mWorldMatrix = scale(mat4(), vec3(5.0f));
 
 		// Attach the keyboard handler
 		using namespace std::placeholders;
-		mKeyboardHandler = std::bind(&NormalMappingDemo::OnKey, this, _1, _2, _3, _4);
+		mKeyboardHandler = bind(&NormalMappingDemo::OnKey, this, _1, _2, _3, _4);
 		mGame->AddKeyboardHandler(mKeyboardHandler);
 	}
 
@@ -225,16 +218,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{
-			ambientIntensity += (float)gameTime.ElapsedGameTime();
-			ambientIntensity = min(ambientIntensity, 1.0f);
+			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::min(ambientIntensity, 1.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_DOWN) && ambientIntensity > 0.0f)
 		{
-			ambientIntensity -= (float)gameTime.ElapsedGameTime();
-			ambientIntensity = max(ambientIntensity, 0.0f);
+			ambientIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::max(ambientIntensity, 0.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
@@ -243,20 +236,20 @@ namespace Rendering
 	void NormalMappingDemo::UpdateDirectionalLight(const GameTime& gameTime)
 	{
 		static float directionalIntensity = 1.0f;
-		float elapsedTime = (float)gameTime.ElapsedGameTime();
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
 
 		// Upddate directional light intensity		
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_HOME) && directionalIntensity < 1.0f)
 		{
 			directionalIntensity += elapsedTime;
-			directionalIntensity = min(directionalIntensity, 1.0f);
+			directionalIntensity = std::min(directionalIntensity, 1.0f);
 
 			mDirectionalLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_END) && directionalIntensity > 0.0f)
 		{
 			directionalIntensity -= elapsedTime;
-			directionalIntensity = max(directionalIntensity, 0.0f);
+			directionalIntensity = std::max(directionalIntensity, 0.0f);
 
 			mDirectionalLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
@@ -300,20 +293,20 @@ namespace Rendering
 
 	void NormalMappingDemo::UpdateSpecularLight(const GameTime& gameTime)
 	{
-		static float specularIntensity = 0.0f;
+		static float specularIntensity = 1.0f;
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_INSERT) && specularIntensity < 1.0f)
 		{
-			specularIntensity += (float)gameTime.ElapsedGameTime();
-			specularIntensity = min(specularIntensity, 1.0f);
+			specularIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = std::min(specularIntensity, 1.0f);
 
 			mSpecularColor = (vec4((vec3)specularIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_DELETE) && specularIntensity > 0.0f)
 		{
-			specularIntensity -= (float)gameTime.ElapsedGameTime();
-			specularIntensity = max(specularIntensity, 0.0f);
+			specularIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = std::max(specularIntensity, 0.0f);
 
 			mSpecularColor = (vec4((vec3)specularIntensity, 1.0f));
 		}
@@ -322,16 +315,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_O) && specularPower < UCHAR_MAX)
 		{
-			specularPower += LightModulationRate * (float)gameTime.ElapsedGameTime();
-			specularPower = min(specularPower, static_cast<float>(UCHAR_MAX));
+			specularPower += LightModulationRate * gameTime.ElapsedGameTimeSeconds().count();
+			specularPower = std::min(specularPower, static_cast<float>(UCHAR_MAX));
 
 			mSpecularPower = specularPower;
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_P) && specularPower > 0.0f)
 		{
-			specularPower -= LightModulationRate * (float)gameTime.ElapsedGameTime();
-			specularPower = max(specularPower, 0.0f);
+			specularPower -= LightModulationRate * gameTime.ElapsedGameTimeSeconds().count();
+			specularPower = std::max(specularPower, 0.0f);
 
 			mSpecularPower = specularPower;
 		}
@@ -339,6 +332,9 @@ namespace Rendering
 
 	void NormalMappingDemo::OnKey(int key, int scancode, int action, int mods)
 	{
+		UNREFERENCED_PARAMETER(scancode);
+		UNREFERENCED_PARAMETER(mods);
+
 		if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		{
 			mShowNormalMapping = !mShowNormalMapping;
