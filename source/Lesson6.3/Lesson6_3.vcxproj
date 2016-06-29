@@ -138,12 +138,14 @@ IF EXIST "$(ProjectDir)content" xcopy /E /Y "$(ProjectDir)Content" "$(OutDir)Con
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="pch.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="RenderingGame.cpp" />
     <ClCompile Include="TransparencyMappingDemo.cpp" />
     <ClCompile Include="TransparencyMappingEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="pch.h" />
     <ClInclude Include="RenderingGame.h" />
     <ClInclude Include="TransparencyMappingDemo.h" />
     <ClInclude Include="TransparencyMappingEffect.h" />
@@ -152,6 +154,11 @@ IF EXIST "$(ProjectDir)content" xcopy /E /Y "$(ProjectDir)Content" "$(OutDir)Con
     <None Include="Content\Effects\TransparencyMappingDemo.frag" />
     <None Include="Content\Effects\TransparencyMappingDemo.vert" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Library\Library.vcxproj">
+      <Project>{0337c844-51ff-43e8-a9ce-2b11b9ac5df6}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

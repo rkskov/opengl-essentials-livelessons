@@ -67,14 +67,14 @@ namespace Rendering
 		CreateVertexBuffer(&vertices[0], vertices.size(), vertexBuffer);
 	}
 
-	void EnvironmentMappingEffect::CreateVertexBuffer(VertexPositionTextureNormal* vertices, GLuint vertexCount, GLuint& vertexBuffer) const
+	void EnvironmentMappingEffect::CreateVertexBuffer(VertexPositionTextureNormal* vertices, uint32_t vertexCount, GLuint& vertexBuffer) const
 	{
 		glGenBuffers(1, &vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, VertexSize() * vertexCount, &vertices[0], GL_STATIC_DRAW);
 	}
 
-    UINT EnvironmentMappingEffect::VertexSize() const
+    uint32_t EnvironmentMappingEffect::VertexSize() const
     {
         return sizeof(VertexPositionTextureNormal);
     }

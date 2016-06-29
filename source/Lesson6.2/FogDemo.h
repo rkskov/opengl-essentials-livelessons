@@ -10,49 +10,46 @@ namespace Library
 	class ProxyModel;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class FogDemo : public DrawableGameComponent
+	class FogDemo : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(FogDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(FogDemo, Library::DrawableGameComponent)
 
 	public:
-		FogDemo(Game& game, Camera& camera);
+		FogDemo(Library::Game& game, Library::Camera& camera);
+		FogDemo(const FogDemo&) = delete;
+		FogDemo& operator=(const FogDemo&) = delete;
+		FogDemo(FogDemo&&) = delete;
+		FogDemo& operator=(FogDemo&&) = delete;
 		~FogDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		FogDemo();
-		FogDemo(const FogDemo& rhs);
-		FogDemo& operator=(const FogDemo& rhs);
-
-		void UpdateAmbientLight(const GameTime& gameTime);
-		void UpdateDirectionalLight(const GameTime& gameTime);
-		void UpdateSpecularLight(const GameTime& gameTime);
+		void UpdateAmbientLight(const Library::GameTime& gameTime);
+		void UpdateDirectionalLight(const Library::GameTime& gameTime);
+		void UpdateSpecularLight(const Library::GameTime& gameTime);
 
 		static const glm::vec2 LightRotationRate;
 		static const float LightModulationRate;
 
+		glm::mat4 mWorldMatrix;
+		glm::vec4 mSpecularColor;
+		glm::vec4 mFogColor;
 		FogEffect mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
-		glm::mat4 mWorldMatrix;
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
-		Light* mAmbientLight;
-		DirectionalLight* mDirectionalLight;
-		glm::vec4 mSpecularColor;
+		Library::Light* mAmbientLight;
+		Library::DirectionalLight* mDirectionalLight;		
 		float mSpecularPower;
-		glm::vec4 mFogColor;
 		float mFogStart;
 		float mFogRange;
-
-		ProxyModel* mProxyModel;
+		Library::ProxyModel* mProxyModel;
 	};
 }

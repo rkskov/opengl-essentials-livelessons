@@ -40,13 +40,14 @@
 #include "Model.h"
 #include "Mesh.h"
 #include "Light.h"
+#include "DirectionalLight.h"
 #include "ProxyModel.h"
 #include "Skybox.h"
 
 // Local
 #include "RenderingGame.h"
-#include "EnvironmentMappingDemo.h"
-#include "EnvironmentMappingEffect.h"
+#include "FogDemo.h"
+#include "FogEffect.h"
 
 //TODO: remove
 #define DeleteObject(object) if((object) != NULL) { delete object; object = NULL; }

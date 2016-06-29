@@ -22,7 +22,7 @@ namespace Rendering
 		virtual void Initialize(GLuint vertexArrayObject) override;
 		virtual void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer) const override;
 		void CreateVertexBuffer(Library::VertexPositionTextureNormal* vertices, std::uint32_t vertexCount, GLuint& vertexBuffer) const;
-		virtual UINT VertexSize() const override;
+		virtual std::uint32_t VertexSize() const override;
 
 	private:
 		enum class VertexAttribute

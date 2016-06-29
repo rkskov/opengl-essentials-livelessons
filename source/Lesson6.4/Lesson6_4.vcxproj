@@ -157,6 +157,11 @@ IF EXIST "$(ProjectDir)content" xcopy /E /Y "$(ProjectDir)Content" "$(OutDir)Con
     <None Include="Content\Effects\NormalMappingDemo.vert" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Library\Library.vcxproj">
+      <Project>{0337c844-51ff-43e8-a9ce-2b11b9ac5df6}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\build\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets" Condition="Exists('..\..\build\packages\Assimp.redist.3.0.0\build\native\Assimp.redist.targets')" />
