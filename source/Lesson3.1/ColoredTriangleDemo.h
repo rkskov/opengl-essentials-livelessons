@@ -3,16 +3,14 @@
 #include "DrawableGameComponent.h"
 #include "ShaderProgram.h"
 
-using namespace Library;
-
 namespace Rendering
 {
-	class ColoredTriangleDemo final : public DrawableGameComponent
+	class ColoredTriangleDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(ColoredTriangleDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(ColoredTriangleDemo, Library::DrawableGameComponent)
 
 	public:		
-		ColoredTriangleDemo(Game& game, Camera& camera);
+		ColoredTriangleDemo(Library::Game& game, Library::Camera& camera);
 		ColoredTriangleDemo(const ColoredTriangleDemo&) = delete;
 		ColoredTriangleDemo& operator=(const ColoredTriangleDemo&) = delete;
 		ColoredTriangleDemo(ColoredTriangleDemo&&) = delete;
@@ -20,7 +18,7 @@ namespace Rendering
 		~ColoredTriangleDemo();
 
 		virtual void Initialize() override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
 		enum class VertexAttribute
@@ -29,7 +27,7 @@ namespace Rendering
 			Color = 1
 		};
 
-		ShaderProgram mShaderProgram;
+		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 	};

@@ -28,6 +28,10 @@ namespace Library
 
     public:
         ModelMaterial(Model& model);
+		ModelMaterial(const ModelMaterial&) = delete;
+		ModelMaterial& operator=(const ModelMaterial&) = delete;
+		ModelMaterial(ModelMaterial&&) = delete;
+		ModelMaterial& operator=(ModelMaterial&&) = delete;
         ~ModelMaterial();
 
         Model& GetModel();
@@ -36,11 +40,9 @@ namespace Library
 
     private:		
         static void InitializeTextureTypeMappings();
-        static std::map<TextureType, UINT> sTextureTypeMappings;
+        static std::map<TextureType, std::uint32_t> sTextureTypeMappings;
 
-        ModelMaterial(Model& model, aiMaterial* material);
-        ModelMaterial(const ModelMaterial& rhs);
-        ModelMaterial& operator=(const ModelMaterial& rhs);
+        ModelMaterial(Model& model, aiMaterial* material);        
 
         Model& mModel;
         std::string mName;

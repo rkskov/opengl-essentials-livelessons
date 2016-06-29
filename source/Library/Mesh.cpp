@@ -11,7 +11,7 @@ namespace Library
 
         // Vertices
         mVertices.reserve(mesh.mNumVertices);
-        for (UINT i = 0; i < mesh.mNumVertices; i++)
+        for (uint32_t i = 0; i < mesh.mNumVertices; i++)
         {
 			aiVector3D v = mesh.mVertices[i];
 			mVertices.push_back(glm::vec3(v.x, v.y, v.z));
@@ -21,7 +21,7 @@ namespace Library
         if (mesh.HasNormals())
         {
             mNormals.reserve(mesh.mNumVertices);
-            for (UINT i = 0; i < mesh.mNumVertices; i++)
+            for (uint32_t i = 0; i < mesh.mNumVertices; i++)
             {
 				aiVector3D n = mesh.mNormals[i];
                 mNormals.push_back(glm::vec3(n.x, n.y, n.z));
@@ -33,7 +33,7 @@ namespace Library
         {
             mTangents.reserve(mesh.mNumVertices);
             mBiNormals.reserve(mesh.mNumVertices);
-            for (UINT i = 0; i < mesh.mNumVertices; i++)
+            for (uint32_t i = 0; i < mesh.mNumVertices; i++)
             {
 				aiVector3D t = mesh.mTangents[i];
                 mTangents.push_back(glm::vec3(t.x, t.y, t.z));
@@ -44,15 +44,15 @@ namespace Library
         }
 
         // Texture Coordinates
-        UINT uvChannelCount = mesh.GetNumUVChannels();
-        for (UINT i = 0; i < uvChannelCount; i++)
+        uint32_t uvChannelCount = mesh.GetNumUVChannels();
+        for (uint32_t i = 0; i < uvChannelCount; i++)
         {
             vector<glm::vec3>* textureCoordinates = new vector<glm::vec3>();
             textureCoordinates->reserve(mesh.mNumVertices);
             mTextureCoordinates.push_back(textureCoordinates);
 
             aiVector3D* aiTextureCoordinates = mesh.mTextureCoords[i];
-            for (UINT j = 0; j < mesh.mNumVertices; j++)
+            for (uint32_t j = 0; j < mesh.mNumVertices; j++)
             {
 				aiVector3D uv = aiTextureCoordinates[j];
                 textureCoordinates->push_back(glm::vec3(uv.x, uv.y, uv.z));
@@ -60,15 +60,15 @@ namespace Library
         }
 
         // Vertex Colors
-        UINT colorChannelCount = mesh.GetNumColorChannels();
-        for (UINT i = 0; i < colorChannelCount; i++)
+        uint32_t colorChannelCount = mesh.GetNumColorChannels();
+        for (uint32_t i = 0; i < colorChannelCount; i++)
         {
             vector<glm::vec4>* vertexColors = new vector<glm::vec4>();
             vertexColors->reserve(mesh.mNumVertices);
             mVertexColors.push_back(vertexColors);
 
             aiColor4D* aiVertexColors = mesh.mColors[i];
-            for (UINT j = 0; j < mesh.mNumVertices; j++)
+            for (uint32_t j = 0; j < mesh.mNumVertices; j++)
             {
 				aiColor4D c = aiVertexColors[j];
                 vertexColors->push_back(glm::vec4(c.r, c.g, c.b, c.a));
@@ -79,11 +79,11 @@ namespace Library
         if (mesh.HasFaces())
         {
             mFaceCount = mesh.mNumFaces;
-            for (UINT i = 0; i < mFaceCount; i++)
+            for (uint32_t i = 0; i < mFaceCount; i++)
             {
                 aiFace* face = &mesh.mFaces[i];
             
-                for (UINT j = 0; j < face->mNumIndices; j++)
+                for (uint32_t j = 0; j < face->mNumIndices; j++)
                 {		
                     mIndices.push_back(face->mIndices[j]);
                 }
@@ -163,6 +163,6 @@ namespace Library
     {
 		glGenBuffers(1, &indexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(UINT) * mIndices.size(), &mIndices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * mIndices.size(), &mIndices[0], GL_STATIC_DRAW);
     }
 }

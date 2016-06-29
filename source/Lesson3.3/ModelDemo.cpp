@@ -2,6 +2,7 @@
 
 using namespace glm;
 using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
@@ -9,7 +10,7 @@ namespace Rendering
 
 	ModelDemo::ModelDemo(Game& game, Camera& camera)
 		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mWorldMatrix(), mIndexCount()
+		mIndexBuffer(0), mWorldViewProjectionLocation(-1),  mIndexCount(0)
 	{
 	}
 
@@ -87,7 +88,7 @@ namespace Rendering
 			vector<vec4>* vertexColors = mesh.VertexColors().at(0);
 			assert(vertexColors->size() == sourceVertices.size());
 
-			for (UINT i = 0; i < sourceVertices.size(); i++)
+			for (size_t i = 0; i < sourceVertices.size(); i++)
 			{
 				const vec3& position = sourceVertices.at(i);
 				const vec4& color = vertexColors->at(i);
@@ -96,7 +97,7 @@ namespace Rendering
 		}
 		else
 		{
-			for (UINT i = 0; i < sourceVertices.size(); i++)
+			for (size_t i = 0; i < sourceVertices.size(); i++)
 			{
 				const vec3& position = sourceVertices.at(i);
 				const vec4& color = ColorHelper::RandomColor();

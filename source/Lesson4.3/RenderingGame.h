@@ -2,8 +2,6 @@
 
 #include "Game.h"
 
-using namespace Library;
-
 namespace Library
 {
 	class GameTime;
@@ -15,24 +13,24 @@ namespace Rendering
 {
 	class FilteringModesDemo;
 
-	class RenderingGame final : public Game
+	class RenderingGame final : public Library::Game
 	{
-		RTTI_DECLARATIONS(RenderingGame, Game)
+		RTTI_DECLARATIONS(RenderingGame, Library::Game)
 
 	public:
 		RenderingGame(HINSTANCE instance, const std::wstring& windowTitle);
 
 	protected:
 		virtual void Initialize() override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 		virtual void Shutdown() override;
 
 	private:
 		void OnKey(int key, int scancode, int action, int mods);
 
-		FirstPersonCamera* mCamera;
+		Library::FirstPersonCamera* mCamera;
 		KeyboardHandler mKeyboardHandler;
-		Grid* mGrid;
+		Library::Grid* mGrid;
 
 		FilteringModesDemo* mFilteringModesDemo;
 	};

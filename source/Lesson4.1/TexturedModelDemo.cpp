@@ -2,6 +2,7 @@
 
 using namespace glm;
 using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
@@ -113,7 +114,7 @@ namespace Rendering
 		vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
 		assert(textureCoordinates->size() == sourceVertices.size());
 
-		for (UINT i = 0; i < sourceVertices.size(); i++)
+		for (size_t i = 0; i < sourceVertices.size(); i++)
 		{
 			const vec3& position = sourceVertices.at(i);
 			const vec2& uv = static_cast<vec2>(textureCoordinates->at(i));

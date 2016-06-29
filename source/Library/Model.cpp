@@ -9,7 +9,7 @@ namespace Library
     {
         Assimp::Importer importer;
 
-		UINT flags = aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType;
+		uint32_t flags = aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType;
         if (flipUVs)
         {
             flags |= aiProcess_FlipUVs;
@@ -23,7 +23,7 @@ namespace Library
 
         if (scene->HasMaterials())
         {
-            for (UINT i = 0; i < scene->mNumMaterials; i++)
+            for (uint32_t i = 0; i < scene->mNumMaterials; i++)
             {
                 mMaterials.push_back(new ModelMaterial(*this, scene->mMaterials[i]));
             }
@@ -31,7 +31,7 @@ namespace Library
 
         if (scene->HasMeshes())
         {
-            for (UINT i = 0; i < scene->mNumMeshes; i++)
+            for (uint32_t i = 0; i < scene->mNumMeshes; i++)
             {	
 				Mesh* mesh = new Mesh(*this, *(scene->mMeshes[i]));
                 mMeshes.push_back(mesh);

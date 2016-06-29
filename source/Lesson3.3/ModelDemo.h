@@ -7,17 +7,14 @@ namespace Library
 {
 	class Mesh;
 }
-
-using namespace Library;
-
 namespace Rendering
 {
-	class ModelDemo final : public DrawableGameComponent
+	class ModelDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(ModelDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(ModelDemo, Library::DrawableGameComponent)
 
 	public:		
-		ModelDemo(Game& game, Camera& camera);
+		ModelDemo(Library::Game& game, Library::Camera& camera);
 		ModelDemo(const ModelDemo&) = delete;
 		ModelDemo& operator=(const ModelDemo&) = delete;
 		ModelDemo(ModelDemo&&) = delete;
@@ -25,7 +22,7 @@ namespace Rendering
 		~ModelDemo();
 
 		virtual void Initialize() override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
 		enum class VertexAttribute
@@ -34,14 +31,14 @@ namespace Rendering
 			Color = 1
 		};		
 
-		void CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer);
+		void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer);
 
 		glm::mat4 mWorldMatrix;
-		ShaderProgram mShaderProgram;
+		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
 		GLint mWorldViewProjectionLocation;		
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 	};
 }

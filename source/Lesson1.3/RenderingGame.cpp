@@ -1,10 +1,13 @@
 #include "pch.h"
 
+using namespace std;
+using namespace Library;
+
 namespace Rendering
 {
 	RTTI_DEFINITIONS(RenderingGame)
 
-	RenderingGame::RenderingGame(HINSTANCE instance, const std::wstring& windowTitle) :
+	RenderingGame::RenderingGame(HINSTANCE instance, const wstring& windowTitle) :
 		Game(instance, windowTitle),
 		mCamera(nullptr), mKeyboardHandler(nullptr), mPointDemo(nullptr)
 	{
@@ -17,7 +20,7 @@ namespace Rendering
 		mServices.AddService(Camera::TypeIdClass(), mCamera);
 
 		using namespace std::placeholders;
-		mKeyboardHandler = std::bind(&RenderingGame::OnKey, this, _1, _2, _3, _4);
+		mKeyboardHandler = bind(&RenderingGame::OnKey, this, _1, _2, _3, _4);
 		AddKeyboardHandler(mKeyboardHandler);
 
 		mPointDemo = new PointDemo(*this, *mCamera);

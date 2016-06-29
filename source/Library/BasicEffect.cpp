@@ -38,7 +38,7 @@ namespace Library
 			vector<vec4>* vertexColors = mesh.VertexColors().at(0);
 			assert(vertexColors->size() == sourceVertices.size());
 
-			for (UINT i = 0; i < sourceVertices.size(); i++)
+			for (size_t i = 0; i < sourceVertices.size(); i++)
 			{
 				const vec3& position = sourceVertices.at(i);
 				const vec4& color = vertexColors->at(i);
@@ -47,7 +47,7 @@ namespace Library
 		}
 		else
 		{
-			for (UINT i = 0; i < sourceVertices.size(); i++)
+			for (size_t i = 0; i < sourceVertices.size(); i++)
 			{
 				const vec3& position = sourceVertices.at(i);
 				vertices.push_back(VertexPositionColor(vec4(position.x, position.y, position.z, 1.0f), ColorHelper::White));

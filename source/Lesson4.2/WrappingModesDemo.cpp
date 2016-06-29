@@ -2,6 +2,7 @@
 
 using namespace glm;
 using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
@@ -49,7 +50,7 @@ namespace Rendering
 		CreateVertexBuffer(vertices, ARRAYSIZE(vertices), mVertexBuffer);
 
 		// Create the index buffer
-		UINT indices[] =
+		uint32_t indices[] =
 		{
 			0, 2, 1,
 			0, 3, 2
@@ -135,18 +136,18 @@ namespace Rendering
 		glBindVertexArray(0);
 	}
 
-	void WrappingModesDemo::CreateVertexBuffer(VertexPositionTexture* vertices, GLuint vertexCount, GLuint& vertexBuffer)
+	void WrappingModesDemo::CreateVertexBuffer(VertexPositionTexture* vertices, uint32_t vertexCount, GLuint& vertexBuffer)
 	{
 		glGenBuffers(1, &vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexPositionTexture) * vertexCount, &vertices[0], GL_STATIC_DRAW);
 	}
 
-	void WrappingModesDemo::CreateIndexBuffer(uint32_t* indices, GLuint indexCount, GLuint& indexBuffer)
+	void WrappingModesDemo::CreateIndexBuffer(uint32_t* indices, uint32_t indexCount, GLuint& indexBuffer)
 	{
 		glGenBuffers(1, &indexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(UINT) * indexCount, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * indexCount, indices, GL_STATIC_DRAW);
 	}
 
 	void WrappingModesDemo::OnKey(int key, int scancode, int action, int mods)

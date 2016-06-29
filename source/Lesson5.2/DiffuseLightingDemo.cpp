@@ -158,7 +158,7 @@ namespace Rendering
 		const vector<vec3>& normals = mesh.Normals();
 		assert(normals.size() == sourceVertices.size());
 
-		for (UINT i = 0; i < sourceVertices.size(); i++)
+		for (size_t i = 0; i < sourceVertices.size(); i++)
 		{
 			const vec3& position = sourceVertices.at(i);
 			const vec2& uv = static_cast<vec2>(textureCoordinates->at(i));

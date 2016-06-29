@@ -2,6 +2,7 @@
 
 using namespace glm;
 using namespace std;
+using namespace Library;
 
 namespace Rendering
 {

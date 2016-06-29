@@ -9,16 +9,14 @@ namespace Library
 	class Mesh;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class TexturedModelDemo final : public DrawableGameComponent
+	class TexturedModelDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(TexturedModelDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(TexturedModelDemo, Library::DrawableGameComponent)
 
 	public:		
-		TexturedModelDemo(Game& game, Camera& camera);
+		TexturedModelDemo(Library::Game& game, Library::Camera& camera);
 		TexturedModelDemo(const TexturedModelDemo&) = delete;
 		TexturedModelDemo& operator=(const TexturedModelDemo&) = delete;
 		TexturedModelDemo(TexturedModelDemo&&) = delete;
@@ -26,7 +24,7 @@ namespace Rendering
 		~TexturedModelDemo();
 
 		virtual void Initialize() override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
 		enum class VertexAttribute
@@ -35,17 +33,17 @@ namespace Rendering
 			TextureCoordinate = 1
 		};		
 
-		void CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer);
+		void CreateVertexBuffer(const Library::Mesh& mesh, GLuint& vertexBuffer);
 		void OnKey(int key, int scancode, int action, int mods);
 
 		glm::mat4 mWorldMatrix;
-		Game::KeyboardHandler mKeyboardHandler;
-		ShaderProgram mShaderProgram;
+		Library::Game::KeyboardHandler mKeyboardHandler;
+		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
 		GLint mWorldViewProjectionLocation;		
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
 		GLuint mAltTexture;
 		GLuint mActiveTexture;

@@ -10,9 +10,9 @@ namespace Library
 }
 namespace Rendering
 {
-	class FilteringModesDemo final : public DrawableGameComponent
+	class FilteringModesDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(FilteringModesDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(FilteringModesDemo, Library::DrawableGameComponent)
 
 	public:		
 		FilteringModesDemo(Library::Game& game, Library::Camera& camera);
@@ -45,8 +45,8 @@ namespace Rendering
 
 		static const std::string FilteringModeNames[];		
 
-		void CreateVertexBuffer(Library::VertexPositionTexture* vertices, GLuint vertexCount, GLuint& vertexBuffer);
-		void CreateIndexBuffer(std::uint32_t* indices, GLuint indexCount, GLuint& indexBuffer);
+		void CreateVertexBuffer(Library::VertexPositionTexture* vertices, std::uint32_t vertexCount, GLuint& vertexBuffer);
+		void CreateIndexBuffer(std::uint32_t* indices, std::uint32_t indexCount, GLuint& indexBuffer);
 		void OnKey(int key, int scancode, int action, int mods);
 		void OutputFilteringMode();
 
@@ -58,9 +58,9 @@ namespace Rendering
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
 		GLint mWorldViewProjectionLocation;
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
 		FilteringMode mActiveFilteringMode;
-		Game::KeyboardHandler mKeyboardHandler;
+		Library::Game::KeyboardHandler mKeyboardHandler;
 	};
 }

@@ -1,5 +1,8 @@
 #include "pch.h"
 
+using namespace std;
+using namespace Library;
+
 namespace Rendering
 {
 	RTTI_DEFINITIONS(PointDemo)
@@ -20,7 +23,7 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 		
 		// Load and compile vertex shader
-		std::vector<char> vertexShaderSource;
+		vector<char> vertexShaderSource;
 		Utility::LoadBinaryFile(L"Content\\Effects\\PointDemo.vert", vertexShaderSource);
 		GLchar* sourcePointer = &vertexShaderSource[0];
 		GLint length = vertexShaderSource.size();
@@ -30,7 +33,7 @@ namespace Rendering
 		glCompileShader(vertexShader);
 
 		// Load and compile fragment shader
-		std::vector<char> fragmentShaderSource;
+		vector<char> fragmentShaderSource;
 		Utility::LoadBinaryFile(L"Content\\Effects\\PointDemo.frag", fragmentShaderSource);
 		sourcePointer = &fragmentShaderSource[0];
 		length = fragmentShaderSource.size();

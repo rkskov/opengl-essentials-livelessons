@@ -42,7 +42,7 @@ namespace Rendering
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
 		Library::Light* mAmbientLight;
 		Library::DirectionalLight* mDirectionalLight;		

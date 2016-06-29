@@ -1,16 +1,18 @@
 #include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(CubeDemo)
 
-	const GLfloat CubeDemo::RotationRate = radians(180.0f);
+	const GLfloat CubeDemo::RotationRate = pi<float>();
 
 	CubeDemo::CubeDemo(Game& game, Camera& camera) :
 		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldViewProjectionLocation(-1)
+		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mIndexCount(0)
 	{
 	}
 
@@ -49,7 +51,7 @@ namespace Rendering
 		glBindBuffer(GL_ARRAY_BUFFER, mVertexBuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-		GLuint indices[] =
+		uint32_t indices[] =
 		{
 			0, 2, 1,
 			0, 3, 2,
@@ -70,9 +72,11 @@ namespace Rendering
 			0, 7, 4
 		};
 
+		mIndexCount = ARRAYSIZE(indices);
+
 		glGenBuffers(1, &mIndexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * mIndexCount, indices, GL_STATIC_DRAW);
 
 		// Create the vertex array object
 		glGenVertexArrays(1, &mVertexArrayObject);
@@ -118,7 +122,7 @@ namespace Rendering
 		glEnable(GL_CULL_FACE);
 		glFrontFace(GL_CCW);
 
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, mIndexCount, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 }

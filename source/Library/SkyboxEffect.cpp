@@ -30,7 +30,7 @@ namespace Library
 
 		vector<VertexPosition> vertices;
 		vertices.reserve(sourceVertices.size());
-		for (UINT i = 0; i < sourceVertices.size(); i++)
+		for (size_t i = 0; i < sourceVertices.size(); i++)
 		{
 			const vec3& position = sourceVertices.at(i);
 			vertices.push_back(VertexPosition(vec4(position.x, position.y, position.z, 1.0f)));

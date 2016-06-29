@@ -1,33 +1,35 @@
 #include "pch.h"
 
+using namespace std;
+
 namespace Library
 {
-	std::string Utility::CurrentDirectory()
+	string Utility::CurrentDirectory()
 	{
 		WCHAR buffer[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, buffer);
-		std::wstring currentDirectoryW(buffer);
+		wstring currentDirectoryW(buffer);
 
-		return std::string(currentDirectoryW.begin(), currentDirectoryW.end());
+		return string(currentDirectoryW.begin(), currentDirectoryW.end());
 	}
 
-	std::wstring Utility::ExecutableDirectory()
+	wstring Utility::ExecutableDirectory()
 	{
 		WCHAR buffer[MAX_PATH];
 		GetModuleFileName(nullptr, buffer, MAX_PATH);
 		PathRemoveFileSpec(buffer);
 
-		return std::wstring(buffer);
+		return wstring(buffer);
 	}
 
-	void Utility::GetFileName(const std::string& inputPath, std::string& filename)
+	void Utility::GetFileName(const string& inputPath, string& filename)
 	{
-		std::string fullPath(inputPath);
-		std::replace(fullPath.begin(),fullPath.end(),'\\','/');
+		string fullPath(inputPath);
+		replace(fullPath.begin(),fullPath.end(),'\\','/');
 
-		std::string::size_type lastSlashIndex = fullPath.find_last_of('/');
+		string::size_type lastSlashIndex = fullPath.find_last_of('/');
 
-		if (lastSlashIndex == std::string::npos)
+		if (lastSlashIndex == string::npos)
 		{
 			filename = fullPath;
 		}
@@ -37,14 +39,14 @@ namespace Library
 		}
 	}
 
-	void Utility::GetDirectory(const std::string& inputPath, std::string& directory)
+	void Utility::GetDirectory(const string& inputPath, string& directory)
 	{
-		std::string fullPath(inputPath);
-		std::replace(fullPath.begin(),fullPath.end(),'\\','/');
+		string fullPath(inputPath);
+		replace(fullPath.begin(),fullPath.end(),'\\','/');
 
-		std::string::size_type lastSlashIndex = fullPath.find_last_of('/');
+		string::size_type lastSlashIndex = fullPath.find_last_of('/');
 
-		if (lastSlashIndex == std::string::npos)
+		if (lastSlashIndex == string::npos)
 		{
 			directory = "";
 		}
@@ -54,14 +56,14 @@ namespace Library
 		}
 	}
 
-	void Utility::GetFileNameAndDirectory(const std::string& inputPath, std::string& directory, std::string& filename)
+	void Utility::GetFileNameAndDirectory(const string& inputPath, string& directory, string& filename)
 	{
-		std::string fullPath(inputPath);
-		std::replace(fullPath.begin(),fullPath.end(),'\\','/');
+		string fullPath(inputPath);
+		replace(fullPath.begin(),fullPath.end(),'\\','/');
 
-		std::string::size_type lastSlashIndex = fullPath.find_last_of('/');
+		string::size_type lastSlashIndex = fullPath.find_last_of('/');
 
-		if (lastSlashIndex == std::string::npos)
+		if (lastSlashIndex == string::npos)
 		{
 			directory = "";
 			filename = fullPath;
@@ -73,54 +75,54 @@ namespace Library
 		}
 	}
 	
-	void Utility::LoadBinaryFile(const std::wstring& filename, std::vector<char>& data)
+	void Utility::LoadBinaryFile(const wstring& filename, vector<char>& data)
 	{
-		std::ifstream file(filename.c_str(), std::ios::binary);
+		ifstream file(filename.c_str(), ios::binary);
 		if (file.bad())
 		{
-			throw std::exception("Could not open file.");
+			throw exception("Could not open file.");
 		}
 
-		file.seekg(0, std::ios::end);
-		UINT size = (UINT)file.tellg();
+		file.seekg(0, ios::end);
+		uint32_t size = static_cast<uint32_t>(file.tellg());
 
 		if (size > 0)
 		{
 			data.resize(size);
-			file.seekg(0, std::ios::beg);			
+			file.seekg(0, ios::beg);			
 			file.read(&data.front(), size);
 		}
 
 		file.close();
 	}
 
-	void Utility::ToWideString(const std::string& source, std::wstring& dest)
+	void Utility::ToWideString(const string& source, wstring& dest)
 	{
 		dest.assign(source.begin(), source.end());
 	}
 
-	std::wstring Utility::ToWideString(const std::string& source)
+	wstring Utility::ToWideString(const string& source)
 	{
-		std::wstring dest;
-		dest.assign(source.begin(), source.end());
-
-		return dest;
-	}
-
-	void Utility::ToString(const std::wstring& source, std::string& dest)
-	{
-		dest.assign(source.begin(), source.end());
-	}
-
-	std::string Utility::ToString(const std::wstring& source)
-	{
-		std::string dest;
+		wstring dest;
 		dest.assign(source.begin(), source.end());
 
 		return dest;
 	}
 
-	void Utility::PathJoin(std::wstring& dest, const std::wstring& sourceDirectory, const std::wstring& sourceFile)
+	void Utility::ToString(const wstring& source, string& dest)
+	{
+		dest.assign(source.begin(), source.end());
+	}
+
+	string Utility::ToString(const wstring& source)
+	{
+		string dest;
+		dest.assign(source.begin(), source.end());
+
+		return dest;
+	}
+
+	void Utility::PathJoin(wstring& dest, const wstring& sourceDirectory, const wstring& sourceFile)
 	{
 		WCHAR buffer[MAX_PATH];
 
@@ -128,7 +130,7 @@ namespace Library
 		dest = buffer;
 	}
 
-	void Utility::GetPathExtension(const std::wstring& source, std::wstring& dest)
+	void Utility::GetPathExtension(const wstring& source, wstring& dest)
 	{
 		dest = PathFindExtension(source.c_str());
 	}

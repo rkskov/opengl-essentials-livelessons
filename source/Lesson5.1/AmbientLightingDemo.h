@@ -45,7 +45,7 @@ namespace Rendering
 		GLuint mIndexBuffer;
 		GLint mWorldViewProjectionLocation;
 		GLint mAmbientColorLocation;		
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;		
 	};
 }

@@ -53,7 +53,7 @@ namespace Rendering
 		GLint mAmbientColorLocation;
 		GLint mLightColorLocation;
 		GLint mLightDirectionLocation;		
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
 		Library::Light* mAmbientLight;
 		Library::DirectionalLight* mDirectionalLight;

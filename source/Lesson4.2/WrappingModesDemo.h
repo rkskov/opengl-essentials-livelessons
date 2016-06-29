@@ -11,9 +11,9 @@ namespace Library
 
 namespace Rendering
 {
-	class WrappingModesDemo final : public DrawableGameComponent
+	class WrappingModesDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(WrappingModesDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(WrappingModesDemo, Library::DrawableGameComponent)
 
 	public:		
 		WrappingModesDemo(Library::Game& game, Library::Camera& camera);
@@ -42,8 +42,8 @@ namespace Rendering
 			End
 		};
 
-		void CreateVertexBuffer(Library::VertexPositionTexture* vertices, GLuint vertexCount, GLuint& vertexBuffer);
-		void CreateIndexBuffer(std::uint32_t* indices, GLuint indexCount, GLuint& indexBuffer);
+		void CreateVertexBuffer(Library::VertexPositionTexture* vertices, std::uint32_t vertexCount, GLuint& vertexBuffer);
+		void CreateIndexBuffer(std::uint32_t* indices, std::uint32_t indexCount, GLuint& indexBuffer);
 		void OnKey(int key, int scancode, int action, int mods);
 
 		glm::mat4 mWorldMatrix;
@@ -54,9 +54,9 @@ namespace Rendering
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
 		GLint mWorldViewProjectionLocation;		
-		GLuint mIndexCount;
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;		
 		WrappingMode mActiveWrappingMode;
-		Game::KeyboardHandler mKeyboardHandler;
+		Library::Game::KeyboardHandler mKeyboardHandler;
 	};
 }

@@ -3,16 +3,14 @@
 #include "DrawableGameComponent.h"
 #include "ShaderProgram.h"
 
-using namespace Library;
-
 namespace Rendering
 {
-	class CubeDemo final : public DrawableGameComponent
+	class CubeDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(CubeDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(CubeDemo, Library::DrawableGameComponent)
 
 	public:		
-		CubeDemo(Game& game, Camera& camera);
+		CubeDemo(Library::Game& game, Library::Camera& camera);
 		CubeDemo(const CubeDemo&) = delete;
 		CubeDemo& operator=(const CubeDemo&) = delete;
 		CubeDemo(CubeDemo&&) = delete;
@@ -20,8 +18,8 @@ namespace Rendering
 		~CubeDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
 		enum class VertexAttribute
@@ -33,10 +31,11 @@ namespace Rendering
 		static const GLfloat RotationRate;
 
 		glm::mat4 mWorldMatrix;
-		ShaderProgram mShaderProgram;
+		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
 		GLuint mIndexBuffer;
-		GLint mWorldViewProjectionLocation;		
+		GLint mWorldViewProjectionLocation;
+		std::uint32_t mIndexCount;
 	};
 }
