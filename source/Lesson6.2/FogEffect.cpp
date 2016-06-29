@@ -47,7 +47,7 @@ namespace Rendering
 		SHADER_VARIABLE_INSTANTIATE(FogStart)
 		SHADER_VARIABLE_INSTANTIATE(FogRange)
 
-			glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Position));
+		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::Position), 4, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, Position));
 		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::Position));
 
 		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTextureNormal), (void*)offsetof(VertexPositionTextureNormal, TextureCoordinates));
@@ -81,7 +81,7 @@ namespace Rendering
 		CreateVertexBuffer(&vertices[0], vertices.size(), vertexBuffer);
 	}
 
-	void FogEffect::CreateVertexBuffer(VertexPositionTextureNormal* vertices, GLuint vertexCount, GLuint& vertexBuffer) const
+	void FogEffect::CreateVertexBuffer(VertexPositionTextureNormal* vertices, uint32_t vertexCount, GLuint& vertexBuffer) const
 	{
 		glGenBuffers(1, &vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);

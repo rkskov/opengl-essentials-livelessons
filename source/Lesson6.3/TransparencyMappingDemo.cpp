@@ -1,26 +1,19 @@
-#include "TransparencyMappingDemo.h"
-#include "Game.h"
-#include "GameException.h"
-#include "ColorHelper.h"
-#include "Camera.h"
-#include "Utility.h"
-#include "VectorHelper.h"
-#include "DirectionalLight.h"
-#include "ProxyModel.h"
-#include "SOIL.h"
+#include "pch.h"
 
 using namespace glm;
+using namespace std;
+using namespace Library;
 
 namespace Rendering
 {
 	RTTI_DEFINITIONS(TransparencyMappingDemo)
 
-	const vec2 TransparencyMappingDemo::LightRotationRate = vec2(360.0f, 360.0f);
+	const vec2 TransparencyMappingDemo::LightRotationRate = vec2(two_pi<float>(), two_pi<float>());
 	const float TransparencyMappingDemo::LightModulationRate = UCHAR_MAX;
 
-	TransparencyMappingDemo::TransparencyMappingDemo(Game& game, Camera& camera)
-		: DrawableGameComponent(game, camera), mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldMatrix(), mIndexCount(), mColorTexture(0), mAmbientLight(nullptr),
+	TransparencyMappingDemo::TransparencyMappingDemo(Game& game, Camera& camera) :
+		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
+		mIndexBuffer(0), mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr),
 		mDirectionalLight(nullptr), mSpecularColor(ColorHelper::Black), mSpecularPower(25.0f),
 		mFogColor(ColorHelper::CornflowerBlue), mFogStart(20.0f), mFogRange(40.0f), mAlphaMap(0),
 		mTrilinearSampler(0), mProxyModel(nullptr)
@@ -45,7 +38,7 @@ namespace Rendering
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\TransparencyMappingDemo.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\TransparencyMappingDemo.frag"));
 		mShaderProgram.BuildProgram(shaders);
@@ -62,7 +55,7 @@ namespace Rendering
 		mShaderProgram.CreateVertexBuffer(vertices, ARRAYSIZE(vertices), mVertexBuffer);
 
 		// Create the index buffer
-		UINT indices[] =
+		uint32_t indices[] =
 		{
 			0, 2, 1,
 			0, 3, 2
@@ -72,7 +65,7 @@ namespace Rendering
 
 		glGenBuffers(1, &mIndexBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(UINT)* mIndexCount, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * mIndexCount, indices, GL_STATIC_DRAW);
 
 		// Load the color texture
 		mColorTexture = SOIL_load_OGL_texture("Content\\Textures\\Checkerboard.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
@@ -109,7 +102,7 @@ namespace Rendering
 		mProxyModel = new ProxyModel(*mGame, *mCamera, "Content\\Models\\DirectionalLightProxy.obj", 0.5f);
 		mProxyModel->Initialize();
 		mProxyModel->SetPosition(10.0f, 0.0, 0.0f);
-		mProxyModel->ApplyRotation(rotate(mat4(), 90.0f, Vector3Helper::Up));
+		mProxyModel->ApplyRotation(rotate(mat4(), half_pi<float>(), Vector3Helper::Up));
 
 		mWorldMatrix = scale(mat4(), vec3(5.0f));
 	}
@@ -172,16 +165,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{
-			ambientIntensity += (float)gameTime.ElapsedGameTime();
-			ambientIntensity = min(ambientIntensity, 1.0f);
+			ambientIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::min(ambientIntensity, 1.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_DOWN) && ambientIntensity > 0.0f)
 		{
-			ambientIntensity -= (float)gameTime.ElapsedGameTime();
-			ambientIntensity = max(ambientIntensity, 0.0f);
+			ambientIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			ambientIntensity = std::max(ambientIntensity, 0.0f);
 
 			mAmbientLight->SetColor(vec4((vec3)ambientIntensity, 1.0f));
 		}
@@ -190,20 +183,20 @@ namespace Rendering
 	void TransparencyMappingDemo::UpdateDirectionalLight(const GameTime& gameTime)
 	{
 		static float directionalIntensity = 1.0f;
-		float elapsedTime = (float)gameTime.ElapsedGameTime();
+		float elapsedTime = gameTime.ElapsedGameTimeSeconds().count();
 
 		// Upddate directional light intensity		
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_HOME) && directionalIntensity < 1.0f)
 		{
 			directionalIntensity += elapsedTime;
-			directionalIntensity = min(directionalIntensity, 1.0f);
+			directionalIntensity = std::min(directionalIntensity, 1.0f);
 
 			mDirectionalLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_END) && directionalIntensity > 0.0f)
 		{
 			directionalIntensity -= elapsedTime;
-			directionalIntensity = max(directionalIntensity, 0.0f);
+			directionalIntensity = std::max(directionalIntensity, 0.0f);
 
 			mDirectionalLight->SetColor(vec4((vec3)directionalIntensity, 1.0f));
 		}
@@ -247,20 +240,20 @@ namespace Rendering
 
 	void TransparencyMappingDemo::UpdateSpecularLight(const GameTime& gameTime)
 	{
-		static float specularIntensity = 0.0f;
+		static float specularIntensity = 1.0f;
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_INSERT) && specularIntensity < 1.0f)
 		{
-			specularIntensity += (float)gameTime.ElapsedGameTime();
-			specularIntensity = min(specularIntensity, 1.0f);
+			specularIntensity += gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = std::min(specularIntensity, 1.0f);
 
 			mSpecularColor = (vec4((vec3)specularIntensity, 1.0f));
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_DELETE) && specularIntensity > 0.0f)
 		{
-			specularIntensity -= (float)gameTime.ElapsedGameTime();
-			specularIntensity = max(specularIntensity, 0.0f);
+			specularIntensity -= gameTime.ElapsedGameTimeSeconds().count();
+			specularIntensity = std::max(specularIntensity, 0.0f);
 
 			mSpecularColor = (vec4((vec3)specularIntensity, 1.0f));
 		}
@@ -269,16 +262,16 @@ namespace Rendering
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_O) && specularPower < UCHAR_MAX)
 		{
-			specularPower += LightModulationRate * (float)gameTime.ElapsedGameTime();
-			specularPower = min(specularPower, static_cast<float>(UCHAR_MAX));
+			specularPower += LightModulationRate * gameTime.ElapsedGameTimeSeconds().count();
+			specularPower = std::min(specularPower, static_cast<float>(UCHAR_MAX));
 
 			mSpecularPower = specularPower;
 		}
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_P) && specularPower > 0.0f)
 		{
-			specularPower -= LightModulationRate * (float)gameTime.ElapsedGameTime();
-			specularPower = max(specularPower, 0.0f);
+			specularPower -= LightModulationRate * gameTime.ElapsedGameTimeSeconds().count();
+			specularPower = std::max(specularPower, 0.0f);
 
 			mSpecularPower = specularPower;
 		}

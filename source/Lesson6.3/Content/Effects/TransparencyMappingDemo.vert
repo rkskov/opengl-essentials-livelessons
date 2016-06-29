@@ -16,6 +16,7 @@ out VS_OUTPUT
 	vec2 TextureCoordinate;
 	vec3 Normal;
 	vec3 LightDirection;
+	vec3 WorldPosition;
 	float FogAmount;
 } OUT;
 
@@ -25,7 +26,6 @@ void main()
 	OUT.TextureCoordinate = TextureCoordinate;
 	OUT.Normal = (World * vec4(Normal, 0.0f)).xyz;
 	OUT.LightDirection = -LightDirection;
-
-	vec3 worldPosition = (World * Position).xyz;
-	OUT.FogAmount = clamp((distance(worldPosition, CameraPosition) - FogStart) / FogRange, 0.0f, 1.0f);
+	OUT.WorldPosition = (World * Position).xyz;
+	OUT.FogAmount = clamp((distance(OUT.WorldPosition, CameraPosition) - FogStart) / FogRange, 0.0f, 1.0f);
 }

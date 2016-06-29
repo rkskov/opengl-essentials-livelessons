@@ -10,51 +10,48 @@ namespace Library
 	class ProxyModel;
 }
 
-using namespace Library;
-
 namespace Rendering
 {
-	class TransparencyMappingDemo : public DrawableGameComponent
+	class TransparencyMappingDemo final : public Library::DrawableGameComponent
 	{
-		RTTI_DECLARATIONS(TransparencyMappingDemo, DrawableGameComponent)
+		RTTI_DECLARATIONS(TransparencyMappingDemo, Library::DrawableGameComponent)
 
 	public:
-		TransparencyMappingDemo(Game& game, Camera& camera);
+		TransparencyMappingDemo(Library::Game& game, Library::Camera& camera);
+		TransparencyMappingDemo(const TransparencyMappingDemo&) = delete;
+		TransparencyMappingDemo& operator=(const TransparencyMappingDemo&) = delete;
+		TransparencyMappingDemo(TransparencyMappingDemo&&) = delete;
+		TransparencyMappingDemo& operator=(TransparencyMappingDemo&&) = delete;
 		~TransparencyMappingDemo();
 
 		virtual void Initialize() override;
-		virtual void Update(const GameTime& gameTime) override;
-		virtual void Draw(const GameTime& gameTime) override;
+		virtual void Update(const Library::GameTime& gameTime) override;
+		virtual void Draw(const Library::GameTime& gameTime) override;
 
 	private:
-		TransparencyMappingDemo();
-		TransparencyMappingDemo(const TransparencyMappingDemo& rhs);
-		TransparencyMappingDemo& operator=(const TransparencyMappingDemo& rhs);
-
-		void UpdateAmbientLight(const GameTime& gameTime);
-		void UpdateDirectionalLight(const GameTime& gameTime);
-		void UpdateSpecularLight(const GameTime& gameTime);
+		void UpdateAmbientLight(const Library::GameTime& gameTime);
+		void UpdateDirectionalLight(const Library::GameTime& gameTime);
+		void UpdateSpecularLight(const Library::GameTime& gameTime);
 
 		static const glm::vec2 LightRotationRate;
 		static const float LightModulationRate;
 
+		glm::mat4 mWorldMatrix;
+		glm::vec4 mSpecularColor;
+		glm::vec4 mFogColor;
 		TransparencyMappingEffect mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;
-		GLuint mIndexBuffer;
-		glm::mat4 mWorldMatrix;
-		GLuint mIndexCount;
+		GLuint mIndexBuffer;		
+		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
-		Light* mAmbientLight;
-		DirectionalLight* mDirectionalLight;
-		glm::vec4 mSpecularColor;
-		float mSpecularPower;
-		glm::vec4 mFogColor;
+		Library::Light* mAmbientLight;
+		Library::DirectionalLight* mDirectionalLight;		
+		float mSpecularPower;		
 		float mFogStart;
 		float mFogRange;
 		GLuint mAlphaMap;
 		GLuint mTrilinearSampler;
-
-		ProxyModel* mProxyModel;
+		Library::ProxyModel* mProxyModel;
 	};
 }

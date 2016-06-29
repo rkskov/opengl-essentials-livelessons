@@ -94,7 +94,7 @@ namespace Library
 			glGetProgramInfoLog(mProgram, logLength, nullptr, const_cast<GLchar*>(log.c_str()));
 
 			stringstream errorMessage;
-			errorMessage << "glCompileShader() failed.\n" << log.c_str();
+			errorMessage << "glLinkProgram() failed.\n" << log.c_str();
 
 			throw GameException(errorMessage.str().c_str());
 		}
