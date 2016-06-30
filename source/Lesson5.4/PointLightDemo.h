@@ -45,9 +45,9 @@ namespace Rendering
 		GLuint mIndexBuffer;		
 		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
-		Library::Light* mAmbientLight;
-		Library::PointLight* mPointLight;		
+		std::unique_ptr<Library::Light> mAmbientLight;
+		std::unique_ptr<Library::PointLight> mPointLight;
+		std::unique_ptr<Library::ProxyModel> mProxyModel;
 		float mSpecularPower;
-		Library::ProxyModel* mProxyModel;
 	};
 }

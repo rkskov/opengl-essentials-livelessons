@@ -47,7 +47,3 @@
 #include "RenderingGame.h"
 #include "SpotLightDemo.h"
 #include "SpotLightEffect.h"
-
-//TODO: remove
-#define DeleteObject(object) if((object) != NULL) { delete object; object = NULL; }
-#define DeleteObjects(objects) if((objects) != NULL) { delete[] objects; objects = NULL; }

@@ -51,7 +51,7 @@ namespace Library
     {
         for (pair<TextureType, vector<wstring>*> textures : mTextures)
         {
-            DeleteObject(textures.second);
+			delete textures.second;
         }
     }
 

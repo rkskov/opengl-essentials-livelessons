@@ -9,23 +9,21 @@ namespace Rendering
 	RTTI_DEFINITIONS(RenderingGame)
 
 	RenderingGame::RenderingGame(HINSTANCE instance, const wstring& windowTitle) :
-		Game(instance, windowTitle),
-		mCamera(nullptr), mKeyboardHandler(nullptr),
-		mColoredTriangleDemo(nullptr)
+		Game(instance, windowTitle), mKeyboardHandler(nullptr)
 	{
 	}
 
 	void RenderingGame::Initialize()
 	{
-		mCamera = new FirstPersonCamera(*this);
+		mCamera = make_shared<FirstPersonCamera>(*this);
 		mComponents.push_back(mCamera);
-		mServices.AddService(Camera::TypeIdClass(), mCamera);
+		mServices.AddService(Camera::TypeIdClass(), mCamera.get());
 
 		using namespace std::placeholders;
 		mKeyboardHandler = bind(&RenderingGame::OnKey, this, _1, _2, _3, _4);
 		AddKeyboardHandler(mKeyboardHandler);
 
-		mColoredTriangleDemo = new ColoredTriangleDemo(*this, *mCamera);
+		mColoredTriangleDemo = make_shared<ColoredTriangleDemo>(*this, *mCamera);
 		mComponents.push_back(mColoredTriangleDemo);
 
 		Game::Initialize();
@@ -33,10 +31,7 @@ namespace Rendering
 
 	void RenderingGame::Shutdown()
 	{
-		DeleteObject(mColoredTriangleDemo);
-
 		RemoveKeyboardHandler(mKeyboardHandler);
-		DeleteObject(mCamera);
 
 		Game::Shutdown();
 	}

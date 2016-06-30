@@ -28,10 +28,10 @@ namespace Rendering
 	private:
 		void OnKey(int key, int scancode, int action, int mods);
 
-		Library::FirstPersonCamera* mCamera;
+		std::shared_ptr<Library::FirstPersonCamera> mCamera;
 		KeyboardHandler mKeyboardHandler;
-		Library::Grid* mGrid;
+		std::shared_ptr<Library::Grid> mGrid;
 
-		FilteringModesDemo* mFilteringModesDemo;
+		std::shared_ptr<FilteringModesDemo> mFilteringModesDemo;
 	};
 }

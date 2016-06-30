@@ -14,17 +14,13 @@ namespace Rendering
 
 	SpotLightDemo::SpotLightDemo(Game& game, Camera& camera) :
 		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mWorldMatrix(), mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr),
-		mSpotLight(nullptr), mSpecularColor(ColorHelper::White), mSpecularPower(25.0f),
-		mProxyModel(nullptr)
+		mIndexBuffer(0), mWorldMatrix(), mIndexCount(0), mColorTexture(0),
+		mSpecularColor(ColorHelper::White), mSpecularPower(25.0f)
 	{
 	}
 
 	SpotLightDemo::~SpotLightDemo()
 	{
-		DeleteObject(mProxyModel);
-		DeleteObject(mSpotLight);
-		DeleteObject(mAmbientLight);
 		glDeleteTextures(1, &mColorTexture);
 		glDeleteBuffers(1, &mIndexBuffer);
 		glDeleteBuffers(1, &mVertexBuffer);
@@ -76,14 +72,14 @@ namespace Rendering
 		mShaderProgram.Initialize(mVertexArrayObject);
 		glBindVertexArray(0);
 
-		mAmbientLight = new Light(*mGame);
+		mAmbientLight = make_unique<Light>(*mGame);
 		mAmbientLight->SetColor(ColorHelper::Black);
 
-		mSpotLight = new SpotLight(*mGame);
+		mSpotLight = make_unique<SpotLight>(*mGame);
 		mSpotLight->SetRadius(500.0f);
 		mSpotLight->SetPosition(5.0f, 0.0f, 10.0f);
 
-		mProxyModel = new ProxyModel(*mGame, *mCamera, "Content\\Models\\SpotLightProxy.obj", 0.5f);
+		mProxyModel = make_unique<ProxyModel>(*mGame, *mCamera, "Content\\Models\\SpotLightProxy.obj", 0.5f);
 		mProxyModel->Initialize();
 		mProxyModel->ApplyRotation(rotate(mat4(), half_pi<float>(), Vector3Helper::Right));
 
@@ -134,7 +130,7 @@ namespace Rendering
 
 	void SpotLightDemo::UpdateAmbientLight(const GameTime& gameTime)
 	{
-		static float ambientIntensity = 0.0f;
+		static float ambientIntensity = mAmbientLight->Color().r;
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{

@@ -26,7 +26,7 @@ namespace Rendering
 	SHADER_VARIABLE_DEFINITION(BlinnPhongEffect, SpecularPower)
 
 	void BlinnPhongEffect::Initialize(GLuint vertexArrayObject)
-	{
+	{	
 		ShaderProgram::Initialize(vertexArrayObject);
 
         SHADER_VARIABLE_INSTANTIATE(WorldViewProjection)

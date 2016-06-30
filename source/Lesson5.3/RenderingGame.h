@@ -13,7 +13,7 @@ namespace Rendering
 {
 	class BlinnPhongDemo;
 
-	class RenderingGame : public Library::Game
+	class RenderingGame final : public Library::Game
 	{
 		RTTI_DECLARATIONS(RenderingGame, Game)
 
@@ -28,10 +28,10 @@ namespace Rendering
 	private:
 		void OnKey(int key, int scancode, int action, int mods);
 
-		Library::FirstPersonCamera* mCamera;
+		std::shared_ptr<Library::FirstPersonCamera> mCamera;
 		KeyboardHandler mKeyboardHandler;
-		Library::Grid* mGrid;
+		std::shared_ptr<Library::Grid> mGrid;
 
-		BlinnPhongDemo* mBlinnPhongDemo;
+		std::shared_ptr<BlinnPhongDemo> mBlinnPhongDemo;
 	};
 }

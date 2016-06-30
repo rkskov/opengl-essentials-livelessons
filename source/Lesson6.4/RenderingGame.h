@@ -29,11 +29,11 @@ namespace Rendering
 	private:
 		void OnKey(int key, int scancode, int action, int mods);
 
-		Library::FirstPersonCamera* mCamera;
+		std::shared_ptr<Library::FirstPersonCamera> mCamera;
 		KeyboardHandler mKeyboardHandler;
-		Library::Grid* mGrid;
-		Library::Skybox* mSkybox;
+		std::shared_ptr<Library::Grid> mGrid;
+		std::shared_ptr<Library::Skybox> mSkybox;
 
-		NormalMappingDemo* mNormalMappingDemo;
+		std::shared_ptr<NormalMappingDemo> mNormalMappingDemo;
 	};
 }

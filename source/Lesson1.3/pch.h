@@ -32,7 +32,3 @@
 // Local
 #include "RenderingGame.h"
 #include "PointDemo.h"
-
-//TODO: remove
-#define DeleteObject(object) if((object) != NULL) { delete object; object = NULL; }
-#define DeleteObjects(objects) if((objects) != NULL) { delete[] objects; objects = NULL; }

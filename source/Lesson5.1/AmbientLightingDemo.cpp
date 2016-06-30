@@ -11,13 +11,12 @@ namespace Rendering
 	AmbientLightingDemo::AmbientLightingDemo(Game& game, Camera& camera) :
 		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
 		mIndexBuffer(0), mWorldViewProjectionLocation(-1), mAmbientColorLocation(-1),
-		mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr)
+		mIndexCount(0), mColorTexture(0)
 	{
 	}
 
 	AmbientLightingDemo::~AmbientLightingDemo()
 	{
-		DeleteObject(mAmbientLight);
 		glDeleteTextures(1, &mColorTexture);
 		glDeleteBuffers(1, &mIndexBuffer);
 		glDeleteBuffers(1, &mVertexBuffer);
@@ -72,7 +71,7 @@ namespace Rendering
 		glVertexAttribPointer(static_cast<GLuint>(VertexAttribute::TextureCoordinate), 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionTexture), (void*)offsetof(VertexPositionTexture, TextureCoordinates));
 		glEnableVertexAttribArray(static_cast<GLuint>(VertexAttribute::TextureCoordinate));
 
-		mAmbientLight = new Light(*mGame);
+		mAmbientLight = make_unique<Light>(*mGame);
 	}
 
 	void AmbientLightingDemo::Update(const GameTime& gameTime)
@@ -124,7 +123,7 @@ namespace Rendering
 
 	void AmbientLightingDemo::UpdateAmbientLight(const GameTime& gameTime)
 	{
-		static float ambientIntensity = 1.0f;
+		static float ambientIntensity = mAmbientLight->Color().r;
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{

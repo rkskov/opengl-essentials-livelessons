@@ -39,7 +39,7 @@ namespace Rendering
 		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
 		GLuint mEnvironmentMap;
-		Library::Light* mAmbientLight;
+		std::unique_ptr<Library::Light> mAmbientLight;
 		float mReflectionAmount;
 		GLuint mColorTextureSampler;
 		GLuint mEnvironmentMapSampler;

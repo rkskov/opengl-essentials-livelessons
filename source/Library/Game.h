@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <memory>
 
 namespace Library
 {
@@ -34,7 +35,7 @@ namespace Library
 		int ScreenHeight() const;
 		float AspectRatio() const;
 		bool IsFullScreen() const;
-		const std::vector<GameComponent*>& Components() const;
+		const std::vector<std::shared_ptr<GameComponent>>& Components() const;
 		const ServiceContainer& Services() const;
 
 		virtual void Run();
@@ -70,7 +71,7 @@ namespace Library
 		GameClock mGameClock;
 		GameTime mGameTime;
 
-		std::vector<GameComponent*> mComponents;
+		std::vector<std::shared_ptr<GameComponent>> mComponents;
 		ServiceContainer mServices;
 
 		std::map<KeyboardHandler*, KeyboardHandler> mKeyboardHandlers;

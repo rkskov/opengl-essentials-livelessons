@@ -13,10 +13,10 @@ namespace Rendering
 
 	NormalMappingDemo::NormalMappingDemo(Game& game, Camera& camera) :
 		DrawableGameComponent(game, camera), mNormalMappingVAO(0), mFogVAO(0),
-		mNormalMappingVertexBuffer(0), mFogVertexBuffer(0), mIndexBuffer(0), mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr),
-		mDirectionalLight(nullptr), mSpecularColor(ColorHelper::Black), mSpecularPower(25.0f),
+		mNormalMappingVertexBuffer(0), mFogVertexBuffer(0), mIndexBuffer(0), mIndexCount(0), mColorTexture(0),
+		mSpecularColor(ColorHelper::Black), mSpecularPower(25.0f),
 		mFogColor(ColorHelper::CornflowerBlue), mFogStart(20.0f), mFogRange(40.0f),
-		mNormalMap(0), mTrilinearSampler(0), mProxyModel(nullptr), mShowNormalMapping(true), mKeyboardHandler(nullptr)
+		mNormalMap(0), mTrilinearSampler(0), mShowNormalMapping(true), mKeyboardHandler(nullptr)
 	{
 	}
 
@@ -25,9 +25,6 @@ namespace Rendering
 		mGame->RemoveKeyboardHandler(mKeyboardHandler);
 		glDeleteSamplers(1, &mTrilinearSampler);
 		glDeleteTextures(1, &mNormalMap);
-		DeleteObject(mProxyModel);
-		DeleteObject(mDirectionalLight);
-		DeleteObject(mAmbientLight);
 		glDeleteTextures(1, &mColorTexture);
 		glDeleteBuffers(1, &mIndexBuffer);
 		glDeleteBuffers(1, &mNormalMappingVertexBuffer);
@@ -118,12 +115,12 @@ namespace Rendering
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * mIndexCount, indices, GL_STATIC_DRAW);
 
-		mAmbientLight = new Light(*mGame);
+		mAmbientLight = make_unique<Light>(*mGame);
 		mAmbientLight->SetColor(ColorHelper::Black);
 
-		mDirectionalLight = new DirectionalLight(*mGame);
+		mDirectionalLight = make_unique<DirectionalLight>(*mGame);
 
-		mProxyModel = new ProxyModel(*mGame, *mCamera, "Content\\Models\\DirectionalLightProxy.obj", 0.5f);
+		mProxyModel = make_unique<ProxyModel>(*mGame, *mCamera, "Content\\Models\\DirectionalLightProxy.obj", 0.5f);
 		mProxyModel->Initialize();
 		mProxyModel->SetPosition(10.0f, 0.0, 0.0f);
 		mProxyModel->ApplyRotation(rotate(mat4(), half_pi<float>(), Vector3Helper::Up));
@@ -214,7 +211,7 @@ namespace Rendering
 
 	void NormalMappingDemo::UpdateAmbientLight(const GameTime& gameTime)
 	{
-		static float ambientIntensity = 0.0f;
+		static float ambientIntensity = mAmbientLight->Color().r;
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{

@@ -9,26 +9,25 @@ namespace Rendering
 	RTTI_DEFINITIONS(RenderingGame)
 
 	RenderingGame::RenderingGame(HINSTANCE instance, const wstring& windowTitle) :
-		Game(instance, windowTitle),
-		mCamera(nullptr), mKeyboardHandler(nullptr), mCubeDemo(nullptr)
+		Game(instance, windowTitle), mKeyboardHandler(nullptr)
 	{
 		mDepthStencilBufferEnabled = true;
 	}
 
 	void RenderingGame::Initialize()
 	{
-		mCamera = new FirstPersonCamera(*this);
+		mCamera = make_shared<FirstPersonCamera>(*this);
 		mComponents.push_back(mCamera);
-		mServices.AddService(Camera::TypeIdClass(), mCamera);
+		mServices.AddService(Camera::TypeIdClass(), mCamera.get());
 
 		using namespace std::placeholders;
 		mKeyboardHandler = bind(&RenderingGame::OnKey, this, _1, _2, _3, _4);
 		AddKeyboardHandler(mKeyboardHandler);
 
-		mGrid = new Grid(*this, *mCamera);
+		mGrid = make_shared<Grid>(*this, *mCamera);
 		mComponents.push_back(mGrid);
 
-		mCubeDemo = new CubeDemo(*this, *mCamera);
+		mCubeDemo = make_shared<CubeDemo>(*this, *mCamera);
 		mComponents.push_back(mCubeDemo);
 
 		Game::Initialize();
@@ -39,11 +38,7 @@ namespace Rendering
 
 	void RenderingGame::Shutdown()
 	{
-		DeleteObject(mCubeDemo);
-
-		DeleteObject(mGrid);
 		RemoveKeyboardHandler(mKeyboardHandler);
-		DeleteObject(mCamera);
 
 		Game::Shutdown();
 	}

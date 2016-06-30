@@ -27,9 +27,9 @@ namespace Rendering
 	private:
 		void OnKey(int key, int scancode, int action, int mods);
 
-		Library::FirstPersonCamera* mCamera;
+		std::shared_ptr<Library::FirstPersonCamera> mCamera;
 		KeyboardHandler mKeyboardHandler;
 
-		PointDemo* mPointDemo;
+		std::shared_ptr<PointDemo> mPointDemo;
 	};
 }

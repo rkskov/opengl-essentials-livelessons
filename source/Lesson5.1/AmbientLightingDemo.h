@@ -38,7 +38,7 @@ namespace Rendering
 		void UpdateAmbientLight(const Library::GameTime& gameTime);
 
 		glm::mat4 mWorldMatrix;
-		Library::Light* mAmbientLight;
+		std::unique_ptr<Library::Light> mAmbientLight;
 		Library::ShaderProgram mShaderProgram;
 		GLuint mVertexArrayObject;
 		GLuint mVertexBuffer;

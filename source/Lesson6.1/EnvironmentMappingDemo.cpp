@@ -11,7 +11,7 @@ namespace Rendering
 	EnvironmentMappingDemo::EnvironmentMappingDemo(Game& game, Camera& camera) :
 		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
 		mIndexBuffer(0), mIndexCount(0), mColorTexture(0), mEnvironmentMap(0),
-		mAmbientLight(nullptr), mEnvironmentColor(ColorHelper::White), mReflectionAmount(1.0f),
+		mEnvironmentColor(ColorHelper::White), mReflectionAmount(1.0f),
 		mColorTextureSampler(0), mEnvironmentMapSampler(0)
 	{
 	}
@@ -20,7 +20,6 @@ namespace Rendering
 	{
 		glDeleteSamplers(1, &mEnvironmentMapSampler);
 		glDeleteSamplers(1, &mColorTextureSampler);
-		DeleteObject(mAmbientLight);
 		glDeleteTextures(1, &mEnvironmentMap);
 		glDeleteTextures(1, &mColorTexture);
 		glDeleteBuffers(1, &mIndexBuffer);
@@ -83,7 +82,7 @@ namespace Rendering
 		mShaderProgram.Initialize(mVertexArrayObject);
 		glBindVertexArray(0);
 
-		mAmbientLight = new Light(*mGame);
+		mAmbientLight = make_unique<Light>(*mGame);
 		mAmbientLight->SetColor(ColorHelper::White);
 	}
 
@@ -128,7 +127,7 @@ namespace Rendering
 
 	void EnvironmentMappingDemo::UpdateAmbientLight(const GameTime& gameTime)
 	{
-		static float ambientIntensity = 0.0f;
+		static float ambientIntensity = mAmbientLight->Color().r;
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{

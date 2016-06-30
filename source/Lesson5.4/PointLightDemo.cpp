@@ -14,17 +14,13 @@ namespace Rendering
 
 	PointLightDemo::PointLightDemo(Game& game, Camera& camera) :
 		DrawableGameComponent(game, camera), mVertexArrayObject(0), mVertexBuffer(0),
-		mIndexBuffer(0), mIndexCount(0), mColorTexture(0), mAmbientLight(nullptr),
-		mPointLight(nullptr), mSpecularColor(ColorHelper::White), mSpecularPower(25.0f),
-		mProxyModel(nullptr)
+		mIndexBuffer(0), mIndexCount(0), mColorTexture(0),
+		mSpecularColor(ColorHelper::White), mSpecularPower(25.0f)
 	{
 	}
 
 	PointLightDemo::~PointLightDemo()
 	{
-		DeleteObject(mProxyModel);
-		DeleteObject(mPointLight);
-		DeleteObject(mAmbientLight);
 		glDeleteTextures(1, &mColorTexture);
 		glDeleteBuffers(1, &mIndexBuffer);
 		glDeleteBuffers(1, &mVertexBuffer);
@@ -62,14 +58,14 @@ namespace Rendering
 		mShaderProgram.Initialize(mVertexArrayObject);
 		glBindVertexArray(0);
 
-		mAmbientLight = new Light(*mGame);
+		mAmbientLight = make_unique<Light>(*mGame);
 		mAmbientLight->SetColor(ColorHelper::Black);
 
-		mPointLight = new PointLight(*mGame);
+		mPointLight = make_unique<PointLight>(*mGame);
 		mPointLight->SetRadius(50.0f);
 		mPointLight->SetPosition(5.0f, 0.0f, 10.0f);
 
-		mProxyModel = new ProxyModel(*mGame, *mCamera, "Content\\Models\\PointLightProxy.obj", 0.5f);
+		mProxyModel = make_unique<ProxyModel>(*mGame, *mCamera, "Content\\Models\\PointLightProxy.obj", 0.5f);
 		mProxyModel->Initialize();
 	}
 
@@ -114,7 +110,7 @@ namespace Rendering
 
 	void PointLightDemo::UpdateAmbientLight(const GameTime& gameTime)
 	{
-		static float ambientIntensity = 0.0f;
+		static float ambientIntensity = mAmbientLight->Color().r;
 
 		if (glfwGetKey(mGame->Window(), GLFW_KEY_PAGE_UP) && ambientIntensity < 1.0f)
 		{

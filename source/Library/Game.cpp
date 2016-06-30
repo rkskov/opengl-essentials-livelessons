@@ -65,7 +65,7 @@ namespace Library
 		return mIsFullScreen;
 	}
 
-	const vector<GameComponent*>& Game::Components() const
+	const std::vector<std::shared_ptr<GameComponent>>& Game::Components() const
 	{
 		return mComponents;
 	}
@@ -104,7 +104,7 @@ namespace Library
 
 	void Game::Initialize()
 	{
-		for (GameComponent* component : mComponents)
+		for (auto& component : mComponents)
 		{
 			component->Initialize();
 		}
@@ -112,7 +112,7 @@ namespace Library
 
 	void Game::Update(const GameTime& gameTime)
 	{
-		for (GameComponent* component : mComponents)
+		for (auto& component : mComponents)
 		{
 			if (component->Enabled())
 			{
@@ -123,7 +123,7 @@ namespace Library
 
 	void Game::Draw(const GameTime& gameTime)
 	{
-		for (GameComponent* component : mComponents)
+		for (auto& component : mComponents)
 		{
 			DrawableGameComponent* drawableGameComponent = component->As<DrawableGameComponent>();
 			if (drawableGameComponent != nullptr && drawableGameComponent->Visible())
@@ -187,6 +187,9 @@ namespace Library
 
 	void Game::Shutdown()
 	{
+		mComponents.clear();
+		mComponents.shrink_to_fit();
+
 		glfwDestroyWindow(mWindow);
 		glfwTerminate();
 	}

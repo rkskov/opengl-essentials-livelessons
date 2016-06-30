@@ -45,11 +45,11 @@ namespace Rendering
 		GLuint mIndexBuffer;
 		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
-		Library::Light* mAmbientLight;
-		Library::DirectionalLight* mDirectionalLight;		
+		std::unique_ptr<Library::Light> mAmbientLight;
+		std::unique_ptr<Library::DirectionalLight> mDirectionalLight;
+		std::unique_ptr<Library::ProxyModel> mProxyModel;
 		float mSpecularPower;
 		float mFogStart;
-		float mFogRange;
-		Library::ProxyModel* mProxyModel;
+		float mFogRange;		
 	};
 }

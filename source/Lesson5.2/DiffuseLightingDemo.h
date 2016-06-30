@@ -55,8 +55,8 @@ namespace Rendering
 		GLint mLightDirectionLocation;		
 		std::uint32_t mIndexCount;
 		GLuint mColorTexture;
-		Library::Light* mAmbientLight;
-		Library::DirectionalLight* mDirectionalLight;
-		Library::ProxyModel* mProxyModel;
+		std::unique_ptr<Library::Light> mAmbientLight;
+		std::unique_ptr<Library::DirectionalLight> mDirectionalLight;
+		std::unique_ptr<Library::ProxyModel> mProxyModel;
 	};
 }
