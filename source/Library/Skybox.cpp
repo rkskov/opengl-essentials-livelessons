@@ -1,12 +1,13 @@
 #include "pch.h"
 
 using namespace glm;
+using namespace std;
 
 namespace Library
 {
 	RTTI_DEFINITIONS(Skybox)
 
-	Skybox::Skybox(Game& game, Camera& camera, const std::string& posXFilename, const std::string& negXFilename, const std::string& posYFilename, const std::string& negYFilename, const std::string& posZFilename, const std::string& negZFilename, float scale) :
+	Skybox::Skybox(Game& game, Camera& camera, const string& posXFilename, const string& negXFilename, const string& posYFilename, const string& negYFilename, const string& posZFilename, const string& negZFilename, float scale) :
 		DrawableGameComponent(game, camera),
 		mPosXFilename(posXFilename), mNegXFilename(negXFilename), mPosYFilename(posYFilename), mNegYFilename(negYFilename), mPosZFilename(posZFilename), mNegZFilename(negZFilename),
 		mShaderProgram(), mVertexArrayObject(0), mVertexBuffer(0), mIndexBuffer(0), mIndexCount(0), mSkyboxTexture(0)
@@ -28,7 +29,7 @@ namespace Library
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\Skybox.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\Skybox.frag"));
 		mShaderProgram.BuildProgram(shaders);

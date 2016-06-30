@@ -1,12 +1,13 @@
 #include "pch.h"
 
 using namespace glm;
+using namespace std;
 
 namespace Library
 {
 	RTTI_DEFINITIONS(ProxyModel)
 
-	ProxyModel::ProxyModel(Game& game, Camera& camera, const std::string& modelFileName, float scale) :
+	ProxyModel::ProxyModel(Game& game, Camera& camera, const string& modelFileName, float scale) :
 		DrawableGameComponent(game, camera),
 		mModelFileName(modelFileName), mVertexArrayObject(0), mVertexBuffer(0),
 		mIndexBuffer(0), mIndexCount(0), mDisplayWireframe(true), mPosition(Vector3Helper::Zero),
@@ -74,7 +75,7 @@ namespace Library
 		SetCurrentDirectory(Utility::ExecutableDirectory().c_str());
 
 		// Build the shader program
-		std::vector<ShaderDefinition> shaders;
+		vector<ShaderDefinition> shaders;
 		shaders.push_back(ShaderDefinition(GL_VERTEX_SHADER, L"Content\\Effects\\BasicEffect.vert"));
 		shaders.push_back(ShaderDefinition(GL_FRAGMENT_SHADER, L"Content\\Effects\\BasicEffect.frag"));
 		mShaderProgram.BuildProgram(shaders);

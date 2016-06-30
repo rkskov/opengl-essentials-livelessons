@@ -65,7 +65,7 @@ namespace Library
 		return mIsFullScreen;
 	}
 
-	const std::vector<std::shared_ptr<GameComponent>>& Game::Components() const
+	const vector<shared_ptr<GameComponent>>& Game::Components() const
 	{
 		return mComponents;
 	}
@@ -189,7 +189,7 @@ namespace Library
 	{
 		mComponents.clear();
 		mComponents.shrink_to_fit();
-
+		mKeyboardHandlers.clear();
 		glfwDestroyWindow(mWindow);
 		glfwTerminate();
 	}
@@ -198,7 +198,7 @@ namespace Library
 	{
 		UNREFERENCED_PARAMETER(window);
 
-		for (auto handler : sInternalInstance->mKeyboardHandlers)
+		for (const auto& handler : sInternalInstance->mKeyboardHandlers)
 		{
 			handler.second(key, scancode, action, mods);
 		}

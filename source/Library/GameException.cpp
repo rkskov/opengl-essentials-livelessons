@@ -1,5 +1,7 @@
 #include "pch.h"
 
+using namespace std;
+
 namespace Library
 {
 	GameException::GameException(const char* const& message, HRESULT hr) :
@@ -12,10 +14,10 @@ namespace Library
 		return mHR;
 	}
 
-	std::wstring GameException::whatw() const
+	wstring GameException::whatw() const
 	{
-		std::string whatString(what());
-		std::wstring whatw;
+		string whatString(what());
+		wstring whatw;
 		whatw.assign(whatString.begin(), whatString.end());
 
 		return whatw;

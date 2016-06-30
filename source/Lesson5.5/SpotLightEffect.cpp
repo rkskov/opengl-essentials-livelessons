@@ -61,15 +61,15 @@ namespace Rendering
 
 	void SpotLightEffect::CreateVertexBuffer(const Mesh& mesh, GLuint& vertexBuffer) const
 	{
-		const std::vector<vec3>& sourceVertices = mesh.Vertices();
+		const vector<vec3>& sourceVertices = mesh.Vertices();
 
-		std::vector<VertexPositionTextureNormal> vertices;
+		vector<VertexPositionTextureNormal> vertices;
 		vertices.reserve(sourceVertices.size());
 
-		std::vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
+		vector<vec3>* textureCoordinates = mesh.TextureCoordinates().at(0);
 		assert(textureCoordinates->size() == sourceVertices.size());
 
-		const std::vector<vec3>& normals = mesh.Normals();
+		const vector<vec3>& normals = mesh.Normals();
 		assert(normals.size() == sourceVertices.size());
 
 		for (size_t i = 0; i < sourceVertices.size(); i++)

@@ -18,7 +18,7 @@ namespace Library
 		static const glm::vec2 Zero;
 		static const glm::vec2 One;
 
-		static std::string ToString(const glm::vec2& vector);		
+		static std::string ToString(const glm::vec2& vector);
 	};
 
 	class Vector3Helper

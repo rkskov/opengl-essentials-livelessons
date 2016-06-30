@@ -1,15 +1,16 @@
 #include "pch.h"
 
 using namespace glm;
+using namespace std;
 
 namespace Library
 {
 	const vec2 Vector2Helper::Zero = vec2(0.0f, 0.0f);
 	const vec2 Vector2Helper::One = vec2(1.0f, 1.0f);
 
-	std::string Vector2Helper::ToString(const vec2& vector)
+	string Vector2Helper::ToString(const vec2& vector)
 	{
-		std::stringstream stream;
+		stringstream stream;
 
 		stream << "{" << vector.x << ", " << vector.y << "}";
 
@@ -25,9 +26,9 @@ namespace Library
 	const vec3 Vector3Helper::Right = vec3(1.0f, 0.0f, 0.0f);
 	const vec3 Vector3Helper::Left = vec3(-1.0f, 0.0f, 0.0f);
 
-	std::string Vector3Helper::ToString(const vec3& vector)
+	string Vector3Helper::ToString(const vec3& vector)
 	{
-		std::stringstream stream;
+		stringstream stream;
 
 		stream << "{" << vector.x << ", " << vector.y << ", " << vector.z << "}";
 
@@ -37,9 +38,9 @@ namespace Library
 	const vec4 Vector4Helper::Zero = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 	const vec4 Vector4Helper::One = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	std::string Vector4Helper::ToString(const vec4& vector)
+	string Vector4Helper::ToString(const vec4& vector)
 	{
-		std::stringstream stream;
+		stringstream stream;
 
 		stream << "{" << vector.x << ", " << vector.y << ", " << vector.z << ", " << vector.w << "}";
 
