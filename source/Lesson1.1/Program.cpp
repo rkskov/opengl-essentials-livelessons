@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR commandLine, int showCommand)
 {
@@ -17,7 +17,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR command
 	GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL Essentials", nullptr, nullptr);
 	if (window == nullptr)
 	{
-		return -1;
+		return -1;   
 	}
 
 	glfwMakeContextCurrent(window);
