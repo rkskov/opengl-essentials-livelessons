@@ -1,4 +1,4 @@
-﻿#include "Common.h"
+#include "Common.h"
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR commandLine, int showCommand)
 {
@@ -26,7 +26,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE previousInstance, LPSTR command
 
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearBufferfv(GL_COLOR, 0, &CornflowerBlue[0]);
+		glClearBufferfv(GL_COLOR, 0, &CornflowerBlue[0]); 
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
