@@ -17,6 +17,6 @@ build:
     - script:
         name: compile
         code: |
-          cd source/test
-          g++ test.cpp -lGL -lGLU -lglut -o test
+          cd source/Lesson5.5
+          g++ LinuxProgram.cpp -lGL -lGLU -lglut -o LinuxProgram
    
