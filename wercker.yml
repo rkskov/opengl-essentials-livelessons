@@ -22,6 +22,6 @@ build:
     # http://devcenter.wercker.com/docs/steps/index.html
   steps:
     - script:
-        name: glversion
+        name: gppversion
         code: |
-          glxinfo | grep "OpenGL version" 
+          g++ -v
