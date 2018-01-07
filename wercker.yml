@@ -18,5 +18,5 @@ build:
         name: compile
         code: |
           cd source/Lesson5.5
-          g++ LinuxProgram.cpp -lGL -lGLU -lglut -o LinuxProgram
+          g++ LinuxProgram.cpp -I/../Library -lGL -lGLU -lglut -o LinuxProgram
    
