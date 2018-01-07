@@ -1,7 +1,9 @@
 #pragma once
 
 #include <exception>
-#include <Windows.h>
+#if defined(WINDOWS)
+#include <windows.h>
+#endif
 #include <string>
 
 namespace Library

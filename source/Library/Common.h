@@ -1,6 +1,11 @@
 #pragma once
 
+#if defined(WINDOWS)
 #include <windows.h>
+#else
+#include "Types.h"
+#endif
+
 #include <exception>
 #include <cassert>
 #include <string>
