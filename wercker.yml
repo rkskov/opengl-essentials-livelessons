@@ -24,4 +24,4 @@ build:
     - script:
         name: glversion
         code: |
-          glxinfo | grep "OpenGL version"
+          glxinfo | grep "OpenGL version" 
