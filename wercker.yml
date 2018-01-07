@@ -18,5 +18,5 @@ build:
         name: compile
         code: |
           cd source/test
-          g++ test.cpp -o test.o -lglut -lz
+          g++ test.cpp -o test.o -lglut
    
