@@ -22,6 +22,6 @@ build:
     # http://devcenter.wercker.com/docs/steps/index.html
   steps:
     - script:
-        name: echo
+        name: glversion
         code: |
-          echo "hello world!"
+          glxinfo | grep "OpenGL version"
