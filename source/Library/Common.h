@@ -1,6 +1,9 @@
 #pragma once
 
-//#include <windows.h>
+#if defined(WINDOWS)
+#include <windows.h>
+#endif
+
 #include <exception>
 #include <cassert>
 #include <string>
